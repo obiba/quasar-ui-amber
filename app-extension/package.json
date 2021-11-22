@@ -1,0 +1,25 @@
+{
+  "name": "@obiba/quasar-app-extension-amber",
+  "version": "0.0.1",
+  "description": "A Quasar App Extension for reusing Quasar custom components in Amber forms",
+  "author": "Yannick Marcon <yannick.marcon@obiba.org>",
+  "license": "MIT",
+  "main": "src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obiba/quasar-ui-amber.git"
+  },
+  "bugs": "https://github.com/obiba/quasar-ui-amber/issues",
+  "homepage": "https://github.com/obiba/quasar-ui-amber",
+  "dependencies": {
+    "@obiba/quasar-ui-amber": "latest"
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  }
+}
