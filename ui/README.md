@@ -72,7 +72,7 @@ Add the following tag(s) after the Quasar ones:
 ```html
 <body>
   <!-- at end of body, AFTER Quasar script(s): -->
-  <script src="https://cdn.jsdelivr.net/npm/quasar-ui-amber-form-ui/dist/index.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/quasar-ui-amber/dist/index.umd.min.js"></script>
 </body>
 ```
 

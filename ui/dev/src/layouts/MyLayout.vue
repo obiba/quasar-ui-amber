@@ -11,7 +11,7 @@
         />
 
         <q-toolbar-title>
-          quasar-ui-amber-form-ui v{{ version }}
+          quasar-ui-amber v{{ version }}
         </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>

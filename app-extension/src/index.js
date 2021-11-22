@@ -8,10 +8,10 @@
 
 function extendConf (conf) {
   // register our boot file
-  conf.boot.push('~quasar-app-extension-amber-form-ui/src/boot/register.js')
+  conf.boot.push('~quasar-app-extension-amber/src/boot/register.js')
 
   // make sure app extension files & ui package gets transpiled
-  conf.build.transpileDependencies.push(/quasar-app-extension-amber-form-ui[\\/]src/)
+  conf.build.transpileDependencies.push(/quasar-app-extension-amber[\\/]src/)
 }
 
 module.exports = function (api) {
@@ -22,7 +22,7 @@ module.exports = function (api) {
   api.compatibleWith('@quasar/app', '^3.0.0')
 
   // Uncomment the line below if you provide a JSON API for your component
-  // api.registerDescribeApi('QADate', '~quasar-ui-amber-form-ui/src/components/QADate.json')
+  // api.registerDescribeApi('QADate', '~quasar-ui-amber/src/components/QADate.json')
 
   // We extend /quasar.conf.js
   api.extendQuasarConf(extendConf)

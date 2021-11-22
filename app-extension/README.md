@@ -1,13 +1,13 @@
-# Quasar App Extension amber-form-ui
+# Quasar App Extension amber
 
 > Add a short description of your App Extension. What does it do? How is it beneficial? Why would someone want to use it?
 
-[![npm](https://img.shields.io/npm/v/quasar-app-extension-amber-form-ui.svg?label=quasar-app-extension-amber-form-ui)](https://www.npmjs.com/package/quasar-app-extension-amber-form-ui)
-[![npm](https://img.shields.io/npm/dt/quasar-app-extension-amber-form-ui.svg)](https://www.npmjs.com/package/quasar-app-extension-amber-form-ui)
+[![npm](https://img.shields.io/npm/v/@obiba/quasar-app-extension-amber.svg?label=quasar-app-extension-amber)](https://www.npmjs.com/package/@obiba/quasar-app-extension-amber)
+[![npm](https://img.shields.io/npm/dt/@obiba/quasar-app-extension-amber.svg)](https://www.npmjs.com/package/@obiba/quasar-app-extension-amber)
 
 # Install
 ```bash
-quasar ext add amber-form-ui
+quasar ext add amber
 ```
 Quasar CLI will retrieve it from NPM and install the extension.
 
@@ -17,7 +17,7 @@ Quasar CLI will retrieve it from NPM and install the extension.
 
 # Uninstall
 ```bash
-quasar ext remove amber-form-ui
+quasar ext remove amber
 ```
 
 # Info
