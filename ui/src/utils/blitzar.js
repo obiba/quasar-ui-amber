@@ -128,16 +128,14 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         id: prefix + item.name,
         component: 'QADate',
         label: tr(item.label),
-        subLabel: tr(item.description),
-        parseInput: (val) => new Date(val)
+        subLabel: tr(item.description)
       };
     } else if (item.type === 'datetime') {
       bitem = {
         id: prefix + item.name,
         component: 'QADatetime',
         label: tr(item.label),
-        subLabel: tr(item.description),
-        parseInput: (val) => new Date(val)
+        subLabel: tr(item.description)
       };
     } else if (item.type === 'time') {
       bitem = {
