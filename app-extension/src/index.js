@@ -8,10 +8,11 @@
 
 function extendConf (conf) {
   // register our boot file
-  conf.boot.push('~quasar-app-extension-amber/src/boot/register.js')
+  conf.boot.push('~@obiba/quasar-app-extension-amber/src/boot/register.js')
 
   // make sure app extension files & ui package gets transpiled
   conf.build.transpileDependencies.push(/quasar-app-extension-amber[\\/]src/)
+  conf.build.transpileDependencies.push(/quasar-ui-amber[\\/]src/)
 }
 
 module.exports = function (api) {
