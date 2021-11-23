@@ -128,21 +128,24 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         id: prefix + item.name,
         component: 'QADate',
         label: tr(item.label),
-        subLabel: tr(item.description)
+        subLabel: tr(item.description),
+        parseInput: (val) => val !== null && val.length === 0 ? null : val
       };
     } else if (item.type === 'datetime') {
       bitem = {
         id: prefix + item.name,
         component: 'QADatetime',
         label: tr(item.label),
-        subLabel: tr(item.description)
+        subLabel: tr(item.description),
+        parseInput: (val) => val !== null && val.length === 0 ? null : val
       };
     } else if (item.type === 'time') {
       bitem = {
         id: prefix + item.name,
         component: 'QATime',
         label: tr(item.label),
-        subLabel: tr(item.description)
+        subLabel: tr(item.description),
+        parseInput: (val) => val !== null && val.length === 0 ? null : val
       };
     } else if (item.type === 'static') {
       bitem = {
