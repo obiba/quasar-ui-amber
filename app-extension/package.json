@@ -15,7 +15,7 @@
   "bugs": "https://github.com/obiba/quasar-ui-amber/issues",
   "homepage": "https://github.com/obiba/quasar-ui-amber",
   "dependencies": {
-    "@obiba/quasar-ui-amber": "latest"
+    "@obiba/quasar-ui-amber": "^0.0.1"
   },
   "engines": {
     "node": ">= 8.9.0",

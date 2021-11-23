@@ -1,19 +1,19 @@
 import { h } from 'vue'
-import { QInput, QIcon, QPopupProxy, QDate } from 'quasar'
+import { QInput, QIcon, QPopupProxy, QTime } from 'quasar'
 
 /*
 <q-input v-model="model"
-  mask="####-##-##"
+  mask="##:##"
   :label="schema.label"
   :hint="schema.description">
   <template v-slot:append>
-    <q-icon name="event" class="cursor-pointer">
-      <q-popup-proxy ref="qDateProxy" transition-show="scale" transition-hide="scale">
-        <q-date v-model="model" mask="YYYY-MM-DD" minimal>
+    <q-icon name="access_time" class="cursor-pointer">
+      <q-popup-proxy transition-show="scale" transition-hide="scale">
+        <q-time v-model="model" mask="HH:mm" format24h>
           <div class="row items-center justify-end">
-            <q-btn v-close-popup :label="$t('close')" flat />
+            <q-btn v-close-popup :label="$t('close')" color="primary" flat />
           </div>
-        </q-date>
+        </q-time>
       </q-popup-proxy>
     </q-icon>
   </template>
@@ -21,7 +21,7 @@ import { QInput, QIcon, QPopupProxy, QDate } from 'quasar'
 */
 
 export default {
-  name: 'QADate',
+  name: 'QATime',
   props: {
     modelValue: String
   },
@@ -34,15 +34,15 @@ export default {
       return h(QInput, {
         modelValue: props.modelValue,
         'onUpdate:modelValue': value => emit('update:modelValue', value),
-        mask: '####-##-##',
+        mask: '##:##',
         clearable: true,
         clearIcon: 'close',
-        class: 'qa-date'
+        class: 'qa-datetime'
       }, {
         prepend () {
           return h(QIcon, 
             {
-              name: 'event',
+              name: 'access_time',
               class: 'cursor-pointer'
             }, {
               default () {
@@ -52,12 +52,12 @@ export default {
                     transitionHide: 'scale'
                   }, {
                     default () {
-                      return h(QDate, 
+                      return h(QTime, 
                         {
                           modelValue: props.modelValue,
                           'onUpdate:modelValue': value => emit('update:modelValue', value),
-                          mask: 'YYYY-MM-DD',
-                          minimal: true
+                          mask: 'HH:mm',
+                          format24h: true
                         }
                       )
                     }

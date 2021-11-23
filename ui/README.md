@@ -5,9 +5,11 @@
 
 **Compatible with Quasar UI v2 and Vue 3**.
 
-# Component QADate
-> Short description of the component
+# Components
 
+* `QADate` input with date picker, using ISO-8601 format
+* `QADatetime` input with date and time pickers, using ISO-8601 and 24h formats
+* `QATime` input with time picker, using 24h format
 
 # Usage
 
