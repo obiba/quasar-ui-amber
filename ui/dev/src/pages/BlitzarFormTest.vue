@@ -17,6 +17,13 @@ import { makeBlitzarQuasarSchemaForm } from 'ui'
 const schema = {
   items: [
     {
+      name: 'HELLO',
+      type: 'text',
+      placeholder: 'pwel',
+      label: 'Hello',
+      description: 'qds qsdqs qsdqs dqsddqs. sdqsd'
+    },
+    {
       name: 'DOB',
       type: 'date',
       label: 'Birth date?',
