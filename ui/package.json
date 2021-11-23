@@ -1,6 +1,6 @@
 {
   "name": "@obiba/quasar-ui-amber",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
   "description": "Quasar components for Amber Forms",
   "license": "MIT",
