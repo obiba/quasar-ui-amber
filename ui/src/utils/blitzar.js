@@ -9,7 +9,17 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
   
   console.log('Translating to ' + locale);
 
-  const tr = (key) => locale ? (schema.i18n[locale][key] ? schema.i18n[locale][key] : (schema.i18n[locale]['en'] ? schema.i18n[locale]['en'] : key)) : key;
+  const tr = (key) => {
+    let rval = key
+    if (locale) {
+      if (schema.i18n[locale][key]) {
+        rval = schema.i18n[locale][key]
+      } else if (schema.i18n['en'][key]) {
+        rval = schema.i18n['en'][key]
+      }
+    }
+    return rval
+  }
   const makeBItem = (item, prefix) => {
     let bitem = undefined;
     if (item.type === 'text') {
@@ -17,7 +27,9 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         id: prefix + item.name,
         component: 'QInput',
         label: tr(item.label),
-        subLabel: tr(item.description)
+        subLabel: tr(item.description),
+        placeholder: tr(item.placeholder),
+        hint: tr(item.hint)
       };
     } else if (item.type === 'textarea') {
       bitem = {
@@ -25,7 +37,9 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         component: 'QInput',
         type: 'textarea',
         label: tr(item.label),
-        subLabel: tr(item.description)
+        subLabel: tr(item.description),
+        placeholder: tr(item.placeholder),
+        hint: tr(item.hint)
       };
     } else if (item.type === 'number') {
       bitem = {
@@ -34,6 +48,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         type: 'number',
         label: tr(item.label),
         subLabel: tr(item.description),
+        hint: tr(item.hint),
         parseInput: Number
       };
     } else if (item.type === 'slider') {
@@ -47,6 +62,20 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         min: item.min ? item.min : 0,
         max: item.max ? item.max : 100,
         labelAlways: true
+      };
+    } else if (item.type === 'rating') {
+      bitem = {
+        id: prefix + item.name,
+        component: 'QRating',
+        label: tr(item.label),
+        subLabel: tr(item.description),
+        hint: tr(item.hint),
+        // component props:
+        max: item.max ? item.max : 5,
+        icon: item.icon ? item.icon : "star",
+        color: item.color ? item.color : "primary",
+        size: item.size ? item.size : "2em",
+        parseValue: Number
       };
     } else if (item.type === 'radiogroup') {
       bitem = {
@@ -85,6 +114,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         component: 'QSelect',
         label: tr(item.label),
         subLabel: tr(item.description),
+        hint: tr(item.hint),
         defaultValue: item.default,
         // component props:
         options: item.options.map(opt => {
@@ -103,6 +133,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         component: 'QSelect',
         label: tr(item.label),
         subLabel: tr(item.description),
+        hint: tr(item.hint),
         defaultValue: item.default,
         // component props:
         options: item.options.map(opt => {
@@ -111,6 +142,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
             label: tr(opt.label)
           }
         }),
+        'use-chips': true,
         'emit-value': true,
         'map-options': true,
         clearable: true,
@@ -129,6 +161,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         component: 'QADate',
         label: tr(item.label),
         subLabel: tr(item.description),
+        placeholder: tr(item.placeholder),
+        hint: tr(item.hint),
         parseInput: (val) => val !== null && val.length === 0 ? null : val
       };
     } else if (item.type === 'datetime') {
@@ -137,6 +171,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         component: 'QADatetime',
         label: tr(item.label),
         subLabel: tr(item.description),
+        placeholder: tr(item.placeholder),
+        hint: tr(item.hint),
         parseInput: (val) => val !== null && val.length === 0 ? null : val
       };
     } else if (item.type === 'time') {
@@ -145,6 +181,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         component: 'QATime',
         label: tr(item.label),
         subLabel: tr(item.description),
+        placeholder: tr(item.placeholder),
+        hint: tr(item.hint),
         parseInput: (val) => val !== null && val.length === 0 ? null : val
       };
     } else if (item.type === 'static') {
@@ -186,17 +224,22 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         });
       }
     }
-    if (bitem && bitem.validation) {
-      bitem.error = new Function('return  (val, { formData }) => ' + bitem.validation);
+    if (bitem && item.validation) {
+      bitem.error = new Function('return (val, { formData }) => ' + item.validation)();
       if (!bitem.dynamicProps)
         bitem.dynamicProps = [];
       bitem.dynamicProps.push('error');
+      if (item.validationMessage)
+        bitem['error-message'] = tr(item.validationMessage)
+      else  
+        bitem['error-message'] = tr('Error')
     }
-    if (bitem && bitem.condition) {
-      bitem.showCondition = new Function('return  (val, { formData }) => ' + bitem.condition);
+    console.log(item.condition)
+    if (bitem && item.condition) {
+      bitem.showCondition = new Function('return (val, { formData }) => ' + item.condition)();
     }
-    if (bitem && bitem.disabled) {
-      bitem.disabled = new Function('return  (val, { formData }) => ' + bitem.disabled);
+    if (bitem && item.disabled) {
+      bitem.disabled = new Function('return (val, { formData }) => ' + item.disabled)();
     }
     return bitem;
   };
@@ -216,6 +259,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     else
       console.error('Can\'t make a Blitzar/Quasar item from ' + JSON.stringify(item, null, ' '));
   });
+  console.log(bschema)
   return bschema;
 }
   

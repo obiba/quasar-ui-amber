@@ -14,6 +14,7 @@ module.exports = function (ctx) {
     ],
 
     css: [
+      'app.sass'
     ],
 
     extras: [
