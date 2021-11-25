@@ -231,33 +231,61 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem;
     console.log('>>> ' + bitem0.id)
     if (bitem0 && item.validation) {
-      bitem0.error = new Function('return (val, { formData }) => ' + item.validation)();
-      if (!bitem0.dynamicProps)
-        bitem0.dynamicProps = [];
-      bitem0.dynamicProps.push('error');
-      if (item.validationMessage)
-        bitem0['error-message'] = tr(item.validationMessage)
-      else  
-        bitem0['error-message'] = tr('Error')
+      const script = `{
+        try {
+          return !(${item.validation})
+        } catch (err) {
+          return false
+        }
+      }`
+      console.log('validation: ' + script)
+      try {
+        bitem0.error = new Function('return (val, { formData }) => ' + script)();
+        if (!bitem0.dynamicProps)
+          bitem0.dynamicProps = [];
+        bitem0.dynamicProps.push('error');
+        if (item.validationMessage)
+          bitem0['error-message'] = tr(item.validationMessage)
+        else  
+          bitem0['error-message'] = tr('Error')
+      } catch (err) {
+        console.error(err)
+      }
     }
     
     if (bitem0 && condition) {
       const script = `{
-        const rval = ${condition}
-        if (!rval) { updateField({ id: '${bitem0.id}', value: null }) }
-        return rval
+        try {
+          const rval = ${condition}
+          if (!rval) { updateField({ id: '${bitem0.id}', value: null }) }
+          return rval
+        } catch (err) {
+          return false
+        }
       }`
       console.log('condition: ' + script)
-      bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)();
+      try {
+        bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)();
+      } catch (err) {
+        console.error(err)
+      }
     }
     if (bitem0 && item.disabled) {
       const script = `{
-        const rval = (${item.disabled})
-        if (rval) { updateField({ id: '${bitem0.id}', value: null }) }
-        return rval
+        try {
+          const rval = (${item.disabled})
+          if (rval) { updateField({ id: '${bitem0.id}', value: null }) }
+          return rval
+        } catch (err) {
+          return false
+        }
       }`
       console.log('disabled: ' + script)
-      bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)();
+      try {
+        bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)();
+      } catch (err) {
+        console.error(err)
+      }
     }
     return bitem;
   };

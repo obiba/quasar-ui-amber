@@ -23,8 +23,8 @@ const schema = {
       description: "Text description",
       placeholder: "Text placeholder",
       hint: "Text hint",
-      validation: "{ console.log(val); console.log(val && val.length > 3); return (val && val.length > 3) }",
-      validationMessage: "Text validation error"
+      validation: "val && val.length > 3",
+      validationMessage: "Text is required and must have a minimum length of 4 chars."
     }
   ],
   i18n: {}
