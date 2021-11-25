@@ -53,7 +53,7 @@ const schema = {
       name: "GROUP",
       type: "group",
       label: "Group label",
-      description: "This the group description",
+      description: "Group description",
       items: [ 
         {
           name: "DATETIME",

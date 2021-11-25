@@ -44,6 +44,32 @@ const schema = {
       placeholder: "Text placeholder",
       hint: "Text hint",
       condition: "formData.RADIOGROUP === '3'"
+    },
+    {
+      name: "GROUP",
+      type: "group",
+      label: "Group label",
+      description: "Group description",
+      condition: "formData.RADIOGROUP === '2'",
+      items: [
+        {
+          name: "DATETIME",
+          type: "datetime",
+          label: "Datetime label",
+          description: "Datetime description",
+          placeholder: "Datetime placeholder",
+          hint: "Datetime hint",
+        },
+        {
+          name: "TIME",
+          type: "time",
+          label: "Time label",
+          description: "Time description",
+          placeholder: "Time placeholder",
+          hint: "Time hint",
+          condition: "formData.RADIOGROUP === '2'"
+        }
+      ]
     }
   ],
   i18n: {}

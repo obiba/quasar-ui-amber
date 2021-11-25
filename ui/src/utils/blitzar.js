@@ -20,7 +20,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     }
     return rval
   }
-  const makeBItem = (item, prefix) => {
+  const makeBItem = (item, prefix, parentCondition) => {
+    const condition = item.condition ? (parentCondition ? `(${parentCondition}) && (${item.condition})` : `${item.condition}`) : parentCondition
     let bitem = undefined;
     if (item.type === 'text') {
       bitem = {
@@ -187,6 +188,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       };
     } else if (item.type === 'static') {
       bitem = {
+        id: prefix + item.name,
         component: 'div',
         slot: [
           {
@@ -204,6 +206,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     } else if (item.type === 'group') {
       bitem = [];
       bitem.push({
+        id: prefix + item.name,
         component: 'div',
         slot: [
           {
@@ -220,26 +223,41 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       });
       if (item.items) {
         item.items.forEach(child => {
-            bitem.push(makeBItem(child, prefix + item.name + '.'));
+            bitem.push(makeBItem(child, prefix + item.name + '.', condition));
         });
       }
     }
-    if (bitem && item.validation) {
-      bitem.error = new Function('return (val, { formData }) => ' + item.validation)();
-      if (!bitem.dynamicProps)
-        bitem.dynamicProps = [];
-      bitem.dynamicProps.push('error');
+
+    const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem;
+    console.log('>>> ' + bitem0.id)
+    if (bitem0 && item.validation) {
+      bitem0.error = new Function('return (val, { formData }) => ' + item.validation)();
+      if (!bitem0.dynamicProps)
+        bitem0.dynamicProps = [];
+      bitem0.dynamicProps.push('error');
       if (item.validationMessage)
-        bitem['error-message'] = tr(item.validationMessage)
+        bitem0['error-message'] = tr(item.validationMessage)
       else  
-        bitem['error-message'] = tr('Error')
+        bitem0['error-message'] = tr('Error')
     }
-    console.log(item.condition)
-    if (bitem && item.condition) {
-      bitem.showCondition = new Function('return (val, { formData }) => ' + item.condition)();
+    
+    if (bitem0 && condition) {
+      const script = `{
+        const rval = ${condition}
+        if (!rval) { updateField({ id: '${bitem0.id}', value: null }) }
+        return rval
+      }`
+      console.log('condition: ' + script)
+      bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)();
     }
-    if (bitem && item.disabled) {
-      bitem.disabled = new Function('return (val, { formData }) => ' + item.disabled)();
+    if (bitem0 && item.disabled) {
+      const script = `{
+        const rval = (${item.disabled})
+        if (rval) { updateField({ id: '${bitem0.id}', value: null }) }
+        return rval
+      }`
+      console.log('disabled: ' + script)
+      bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)();
     }
     return bitem;
   };
