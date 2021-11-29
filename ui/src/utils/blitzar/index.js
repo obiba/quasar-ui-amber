@@ -81,7 +81,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         const script = `{
           try {
             const rval = ${condition}
-            if (!rval) { updateField({ id: '${bitem0.id}', value: null }) }
+            if (!rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
             return rval
           } catch (err) {
             return false
@@ -95,10 +95,11 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         }
       }
       if (bitem0 && item.disabled) {
+        
         const script = `{
           try {
             const rval = (${item.disabled})
-            if (rval) { updateField({ id: '${bitem0.id}', value: null }) }
+            if (rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
             return rval
           } catch (err) {
             return false
@@ -106,7 +107,24 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         }`
         console.log('disabled: ' + script)
         try {
+          bitem0.dynamicProps = bitem0.dynamicProps ? bitem0.dynamicProps.push('disabled') : ['disabled']
           bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)();
+        } catch (err) {
+          console.error(err)
+        }
+      }
+      if (bitem0 && item.required) {
+        const script = `{
+          try {
+            return (${item.required})
+          } catch (err) {
+            return false
+          }
+        }`
+        console.log('required: ' + script)
+        try {
+          //bitem0.dynamicProps = bitem0.dynamicProps ? bitem0.dynamicProps.push('required') : ['required']
+          bitem0.required = new Function('return (val, { formData, updateField }) => ' + script)();
         } catch (err) {
           console.error(err)
         }

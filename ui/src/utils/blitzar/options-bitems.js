@@ -48,6 +48,7 @@ class CheckboxGroupBItem extends BItem {
         })
       }
     }
+
 }
 
 export { RadioGroupBItem, CheckboxGroupBItem }
