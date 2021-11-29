@@ -1,25 +1,8 @@
-function makeBlitzarQuasarSchemaForm(schema, options) {
-  const locale = (options.locale && schema.i18n) ? 
-    (schema.i18n[options.locale] ? 
-      options.locale : 
-      (schema.i18n['en'] ? 
-        'en' : 
-        undefined)) : 
-    undefined;
-  
-  console.log('Translating to ' + locale);
+import makeSchemaFormTr from './i18n'
 
-  const tr = (key) => {
-    let rval = key
-    if (locale) {
-      if (schema.i18n[locale][key]) {
-        rval = schema.i18n[locale][key]
-      } else if (schema.i18n['en'][key]) {
-        rval = schema.i18n['en'][key]
-      }
-    }
-    return rval
-  }
+function makeBlitzarQuasarSchemaForm(schema, options) {
+  const tr = makeSchemaFormTr(schema, options)
+
   const makeBItem = (item, prefix, parentCondition) => {
     const condition = item.condition ? (parentCondition ? `(${parentCondition}) && (${item.condition})` : `${item.condition}`) : parentCondition
     let bitem = undefined;

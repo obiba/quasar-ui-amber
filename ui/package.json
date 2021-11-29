@@ -1,6 +1,6 @@
 {
   "name": "@obiba/quasar-ui-amber",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
   "description": "Quasar components for Amber Forms",
   "license": "MIT",
@@ -14,7 +14,8 @@
     "dev:android": "cd dev && yarn 'dev:android' && cd ..",
     "dev:electron": "cd dev && yarn 'dev:electron' && cd ..",
     "build": "node build/index.js",
-    "build:js": "node build/script.javascript.js"
+    "build:js": "node build/script.javascript.js",
+    "push": "yarn build && yarn publish"
   },
   "publishConfig": {
     "access": "public"
