@@ -157,10 +157,10 @@ const schema = {
       description: 'Toggle description'
     },
     {
-      name: 'STATIC',
-      type: 'static',
-      label: 'Static label',
-      description: 'Static description',
+      name: 'SECTION',
+      type: 'section',
+      label: 'Section label',
+      description: 'Section description',
       labelClass: 'text-h4',
       descriptionClass: 'text-caption text-grey-8'
     },
