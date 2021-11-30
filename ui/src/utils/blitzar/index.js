@@ -34,6 +34,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         slot: [
           {
             component: 'div',
+            id: (prefix + item.name).replaceAll('.', '_').toLowerCase(),
             slot: tr(item.label),
             class: item.labelClass ? item.labelClass : 'text-h4'
           },
@@ -135,19 +136,20 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
 
   const prefix = options.prefix ? options.prefix + '.' : '';
   const bschema = [];
-  schema.items.forEach(item => {
-    const bitem = makeBItem(item, prefix);
-    if (bitem) {
-      if (Array.isArray(bitem)) {
-        bitem.forEach(item => bschema.push(item));
+  if (schema.items) {
+    schema.items.forEach(item => {
+      const bitem = makeBItem(item, prefix)
+      if (bitem) {
+        if (Array.isArray(bitem)) {
+          bitem.forEach(item => bschema.push(item))
+        } else {
+          bschema.push(bitem)
+        }
       } else {
-        bschema.push(bitem);
+        console.error('Can\'t make a Blitzar/Quasar item from ' + JSON.stringify(item, null, ' '))
       }
-    }
-      
-    else
-      console.error('Can\'t make a Blitzar/Quasar item from ' + JSON.stringify(item, null, ' '));
-  });
+    })
+  }
   console.log(bschema)
   return bschema;
 }
