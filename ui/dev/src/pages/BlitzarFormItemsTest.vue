@@ -131,7 +131,7 @@ const schema = {
     },
     {
       name: 'MULTISELECT',
-      type: 'multiselect',
+      type: 'select',
       label: 'Multiselect label',
       description: 'Multiselect description',
       hint: 'Multiselect hint',
@@ -148,7 +148,8 @@ const schema = {
           value: '3',
           label: 'alligator'
         }
-      ]
+      ],
+      multiple: true
     },
     {
       name: 'AUTOCOMPLETE',
@@ -177,7 +178,7 @@ const schema = {
     },
     {
       name: 'MULTIAUTOCOMPLETE',
-      type: 'multiautocomplete',
+      type: 'autocomplete',
       label: 'Multiautocomplete label',
       description: 'Multiautocomplete description',
       hint: 'Multiautocomplete hint',
@@ -198,7 +199,8 @@ const schema = {
           value: '4',
           label: 'elephant'
         }
-      ]
+      ],
+      multiple: true
     },
     {
       name: 'TOGGLE',

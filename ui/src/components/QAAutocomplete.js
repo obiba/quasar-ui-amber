@@ -27,12 +27,12 @@ export default {
   setup(props, { emit }) {
     console.log(props)
     
-    const filterOptions = ref(props.options)
+    const filterOptions = ref([])
 
     const filterFn = (val, update) => {
         update(() => {
             if (val === '') {
-                filterOptions.value = props.options
+                filterOptions.value = []
             }
             else {
                 const needle = val.toLowerCase()
@@ -58,6 +58,7 @@ export default {
         'emit-value': true,
         'map-options': true,
         'input-debounce': '0',
+        'hide-dropdown-icon': true,
         clearable: true,
         multiple: props.multiple,
         options: filterOptions.value,
