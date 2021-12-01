@@ -2,7 +2,7 @@ import makeSchemaFormTr from '../i18n'
 import { TextBItem, TextAreaBItem } from './text-bitems'
 import { NumberBItem, SliderBItem, RatingBItem } from './number-items'
 import { RadioGroupBItem, CheckboxGroupBItem } from './options-bitems'
-import { SelectBItem, MultiSelectBItem } from './select-bitems'
+import { SelectBItem, MultiSelectBItem, AutocompleteBItem, MultiAutocompleteBItem } from './select-bitems'
 import { ToggleBItem } from './logical-bitems'
 import { DateBItem, DatetimeBItem, TimeBItem } from './datetime-bitems'
 import { SectionBItem } from './misc-bitems'
@@ -15,6 +15,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     new NumberBItem(tr), new SliderBItem(tr), new RatingBItem(tr), 
     new RadioGroupBItem(tr), new CheckboxGroupBItem(tr), 
     new SelectBItem(tr), new MultiSelectBItem(tr), 
+    new AutocompleteBItem(tr), new MultiAutocompleteBItem(tr),
     new ToggleBItem(tr),
     new DateBItem(tr), new DatetimeBItem(tr), new TimeBItem(tr),
     new SectionBItem(tr)

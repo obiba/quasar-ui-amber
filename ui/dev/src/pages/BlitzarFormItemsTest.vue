@@ -151,6 +151,56 @@ const schema = {
       ]
     },
     {
+      name: 'AUTOCOMPLETE',
+      type: 'autocomplete',
+      label: 'Autocomplete label',
+      description: 'Autocomplete description',
+      hint: 'Autocomplete hint',
+      options: [
+        {
+          value: '1',
+          label: 'cat'
+        },
+        {
+          value: '2',
+          label: 'dog'
+        },
+        {
+          value: '3',
+          label: 'alligator'
+        },
+        {
+          value: '4',
+          label: 'elephant'
+        }
+      ]
+    },
+    {
+      name: 'MULTIAUTOCOMPLETE',
+      type: 'multiautocomplete',
+      label: 'Multiautocomplete label',
+      description: 'Multiautocomplete description',
+      hint: 'Multiautocomplete hint',
+      options: [
+        {
+          value: '1',
+          label: 'cat'
+        },
+        {
+          value: '2',
+          label: 'dog'
+        },
+        {
+          value: '3',
+          label: 'alligator'
+        },
+        {
+          value: '4',
+          label: 'elephant'
+        }
+      ]
+    },
+    {
       name: 'TOGGLE',
       type: 'toggle',
       label: 'Toggle label',

@@ -58,4 +58,55 @@ class MultiSelectBItem extends BItem {
     }
 }
 
-export { SelectBItem, MultiSelectBItem }
+class AutocompleteBItem extends BItem {
+  
+  isFor(type) {
+    return type === 'autocomplete'
+  }
+
+  makeBItem(item, prefix) {
+    return {
+      id: prefix + item.name,
+      component: 'QAAutocomplete',
+      label: this.tr(item.label),
+      subLabel: this.tr(item.description),
+      hint: this.tr(item.hint),
+      defaultValue: item.default,
+      // component props:
+      options: item.options.map(opt => {
+        return {
+          value: opt.value,
+          label: this.tr(opt.label)
+        }
+      })
+    }
+  }
+}
+
+class MultiAutocompleteBItem extends BItem {
+  
+  isFor(type) {
+    return type === 'multiautocomplete'
+  }
+
+  makeBItem(item, prefix) {
+    return {
+      id: prefix + item.name,
+      component: 'QAAutocomplete',
+      label: this.tr(item.label),
+      subLabel: this.tr(item.description),
+      hint: this.tr(item.hint),
+      defaultValue: item.default,
+      // component props:
+      options: item.options.map(opt => {
+        return {
+          value: opt.value,
+          label: this.tr(opt.label)
+        }
+      }),
+      multiple: true
+    }
+  }
+}
+
+export { SelectBItem, MultiSelectBItem, AutocompleteBItem, MultiAutocompleteBItem }

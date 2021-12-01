@@ -1,3 +1,4 @@
+import QAAutocomplete from './components/QAAutocomplete'
 import QADate from './components/QADate'
 import QADatetime from './components/QADatetime'
 import QATime from './components/QATime'
@@ -8,6 +9,7 @@ import { QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 'quasar
 const version = __UI_VERSION__
 
 function install (app) {
+  app.component(QAAutocomplete.name, QAAutocomplete)
   app.component(QADate.name, QADate)
   app.component(QADatetime.name, QADatetime)
   app.component(QATime.name, QATime)
