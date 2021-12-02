@@ -57,6 +57,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem
       console.log('>>> ' + bitem0.id)
 
+      // validation
       if (bitem0 && item.validation) {
         const bvalidation = BItem.variableRefRewrite(item.validation)
         const script = `{
@@ -81,6 +82,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         }
       }
       
+      // condition
       if (bitem0 && condition) {
         const bcondition = BItem.variableRefRewrite(condition)
         const script = `{
@@ -99,6 +101,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           console.error(err)
         }
       }
+
+      // disabled
       if (bitem0 && item.disabled) {
         const bdisabled = BItem.variableRefRewrite(item.disabled)
         const script = `{
@@ -118,6 +122,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           console.error(err)
         }
       }
+
+      // required
       if (bitem0 && item.required) {
         const brequired = BItem.variableRefRewrite(item.required)
         const script = `{
