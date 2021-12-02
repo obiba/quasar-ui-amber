@@ -5,7 +5,7 @@ class BItem {
     }
 
     // rewrites $('VAR') to formData.VAR
-    static variableRefRewrite = (script) => {
+    static variableRefRewrite(script) {
         const doRewrite = (match, p1, offset, string) => {
             // console.log([match, p1, offset, string].join(', '))
             return 'formData.' + p1;

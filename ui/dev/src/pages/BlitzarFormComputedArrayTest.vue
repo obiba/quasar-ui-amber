@@ -17,36 +17,6 @@ import { makeBlitzarQuasarSchemaForm } from 'ui'
 const schema = {
   items: [
     {
-      name: "FIRSTNAME",
-      type: "text",
-      label: "First name"
-    },
-    {
-      name: "LASTNAME",
-      type: "text",
-      label: "Last name"
-    },
-    {
-      name: "FULLNAME",
-      type: "computed",
-      compute: "(($('FIRSTNAME') || '') + ' ' + ($('LASTNAME') || '')).trim()"
-    },
-    {
-      name: "NUM1",
-      type: "number",
-      label: "Number one"
-    },
-    {
-      name: "NUM2",
-      type: "number",
-      label: "Number two"
-    },
-    {
-      name: "SUM",
-      type: "computed",
-      compute: "($('NUM1') || 0) + ($('NUM2') || 0)"
-    },
-    {
       name: "BOOL1",
       type: "toggle",
       label: "Bool one"
@@ -57,9 +27,34 @@ const schema = {
       label: "Bool two"
     },
     {
-      name: "BOOL",
+      name: "BOOLARRAY",
       type: "computed",
-      compute: "$('BOOL1') && $('BOOL2')"
+      compute: "[$('BOOL1'), $('BOOL2')]"
+    },
+    {
+      name: "SELECT",
+      type: "select",
+      label: "Select",
+      multiple: true,
+      options: [ 
+        {
+          value: "1",
+          label: "yes"
+        }, 
+        {
+          value: "2",
+          label: "no"
+        }, 
+        {
+          value: "3",
+          label: "other"
+        }
+      ]
+    },
+    {
+      name: "SELECTMAP",
+      type: "computed",
+      compute: "$('SELECT').map(v => v === '1' ? true : false)"
     }
   ],
   i18n: {}
