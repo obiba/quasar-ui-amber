@@ -11,7 +11,8 @@ class ToggleBItem extends BItem {
             id: prefix + item.name,
             component: 'QToggle',
             label: this.tr(item.label),
-            subLabel: this.tr(item.description)
+            subLabel: this.tr(item.description),
+            defaultValue: item.default ? (item.default === 'true' ? true : false) : undefined
         }
     }
 }

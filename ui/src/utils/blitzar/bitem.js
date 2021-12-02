@@ -13,6 +13,23 @@ class BItem {
         return script ? script.replace(/\$\('([\w\.]+)'\)/g, doRewrite) : script
     }
 
+    static stringToArray(value) {
+        let rval = []
+        const parse = (str) =>
+        	str.slice(1, str.length - 1).split(',')
+		        .map(v => v.trim())
+		        .map(v => (v.startsWith('\'') && v.endsWith('\'')) || (v.startsWith('"') && v.endsWith('"')) ? v.slice(1, v.length - 1) : v)
+
+        if (value) {
+            if (value.trim().startsWith('[') && value.trim().endsWith(']')) {
+                rval = parse(value.trim())
+            } else {
+                rval = [value]
+            }
+        }
+        return rval
+    }
+
 }
 
 export default BItem

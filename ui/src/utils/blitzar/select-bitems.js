@@ -13,7 +13,7 @@ class SelectBItem extends BItem {
         label: this.tr(item.label),
         subLabel: this.tr(item.description),
         hint: this.tr(item.hint),
-        defaultValue: item.default,
+        defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
         // component props:
         options: item.options.map(opt => {
           return {
@@ -43,7 +43,7 @@ class AutocompleteBItem extends BItem {
       label: this.tr(item.label),
       subLabel: this.tr(item.description),
       hint: this.tr(item.hint),
-      defaultValue: item.default,
+      defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
       // component props:
       options: item.options.map(opt => {
         return {

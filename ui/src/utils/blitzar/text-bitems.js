@@ -13,7 +13,8 @@ class TextBItem extends BItem {
             label: this.tr(item.label),
             subLabel: this.tr(item.description),
             placeholder: this.tr(item.placeholder),
-            hint: this.tr(item.hint)
+            hint: this.tr(item.hint),
+            defaultValue: item.default
         }
     }
 }
@@ -32,7 +33,8 @@ class TextAreaBItem extends BItem {
             label: this.tr(item.label),
             subLabel: this.tr(item.description),
             placeholder: this.tr(item.placeholder),
-            hint: this.tr(item.hint)
+            hint: this.tr(item.hint),
+            defaultValue: item.default
         }
     }
 }

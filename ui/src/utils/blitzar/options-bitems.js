@@ -37,7 +37,7 @@ class CheckboxGroupBItem extends BItem {
         component: 'QOptionGroup',
         label: this.tr(item.label),
         subLabel: this.tr(item.description),
-        defaultValue: () => item.default ? [item.default] : [],
+        defaultValue: BItem.stringToArray(item.default),
         // component props:
         type: 'checkbox',
         options: item.options.map(opt => {
