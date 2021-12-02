@@ -1,11 +1,12 @@
 import makeSchemaFormTr from '../i18n'
+import BItem from './bitem'
 import { TextBItem, TextAreaBItem } from './text-bitems'
 import { NumberBItem, SliderBItem, RatingBItem } from './number-items'
 import { RadioGroupBItem, CheckboxGroupBItem } from './options-bitems'
 import { SelectBItem, AutocompleteBItem } from './select-bitems'
 import { ToggleBItem } from './logical-bitems'
 import { DateBItem, DatetimeBItem, TimeBItem } from './datetime-bitems'
-import { SectionBItem } from './misc-bitems'
+import { SectionBItem, ComputedBItem } from './misc-bitems'
 
 function makeBlitzarQuasarSchemaForm(schema, options) {
   const tr = makeSchemaFormTr(schema, options)
@@ -17,26 +18,17 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     new SelectBItem(tr), new AutocompleteBItem(tr),
     new ToggleBItem(tr),
     new DateBItem(tr), new DatetimeBItem(tr), new TimeBItem(tr),
-    new SectionBItem(tr)
+    new SectionBItem(tr), new ComputedBItem(tr)
   ]
-
-  // rewrites $('VAR') to formData.VAR
-  const variableRefRewrite = (script) => { 
-    const doRewrite = (match, p1, offset, string) => {
-      // console.log([match, p1, offset, string].join(', '))
-      return 'formData.' + p1;
-    }
-    return script ? script.replace(/\$\('([\w\.]+)'\)/g, doRewrite) : script
-  }
 
   const makeBItem = (item, prefix, parentCondition) => {
     let condition = (item.condition ? (parentCondition ? `(${parentCondition}) && (${item.condition})` : `${item.condition}`) : parentCondition)
-    let bitem = undefined;
+    let bitem = undefined
     const builder = builders.filter(b => b.isFor(item.type)).pop()
     if (builder) {
       bitem = builder.makeBItem(item, prefix)
     } else if (item.type === 'group') {
-      bitem = [];
+      bitem = []
       bitem.push({
         id: prefix + item.name,
         component: 'div',
@@ -53,20 +45,20 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
             class: item.descriptionClass ? item.descriptionClass : 'text-subtitle2 text-grey-8'
           }
         ]
-      });
+      })
       if (item.items) {
         item.items.forEach(child => {
-            bitem.push(makeBItem(child, prefix + item.name + '.', condition));
-        });
+            bitem.push(makeBItem(child, prefix + item.name + '.', condition))
+        })
       }
     }
 
     if (bitem) {
-      const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem;
+      const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem
       console.log('>>> ' + bitem0.id)
-      
+
       if (bitem0 && item.validation) {
-        const bvalidation = variableRefRewrite(item.validation)
+        const bvalidation = BItem.variableRefRewrite(item.validation)
         const script = `{
           try {
             return !(${bvalidation})
@@ -76,10 +68,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         }`
         console.log('validation: ' + script)
         try {
-          bitem0.error = new Function('return (val, { formData }) => ' + script)();
+          bitem0.error = new Function('return (val, { formData }) => ' + script)()
           if (!bitem0.dynamicProps)
-            bitem0.dynamicProps = [];
-          bitem0.dynamicProps.push('error');
+            bitem0.dynamicProps = []
+          bitem0.dynamicProps.push('error')
           if (item.validationMessage)
             bitem0['error-message'] = tr(item.validationMessage)
           else  
@@ -90,7 +82,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       }
       
       if (bitem0 && condition) {
-        const bcondition = variableRefRewrite(condition)
+        const bcondition = BItem.variableRefRewrite(condition)
         const script = `{
           try {
             const rval = ${bcondition}
@@ -102,13 +94,13 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         }`
         console.log('condition: ' + script)
         try {
-          bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)();
+          bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)()
         } catch (err) {
           console.error(err)
         }
       }
       if (bitem0 && item.disabled) {
-        const bdisabled = variableRefRewrite(item.disabled)
+        const bdisabled = BItem.variableRefRewrite(item.disabled)
         const script = `{
           try {
             const rval = (${bdisabled})
@@ -121,13 +113,13 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         console.log('disabled: ' + script)
         try {
           bitem0.dynamicProps = bitem0.dynamicProps ? bitem0.dynamicProps.push('disabled') : ['disabled']
-          bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)();
+          bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)()
         } catch (err) {
           console.error(err)
         }
       }
       if (bitem0 && item.required) {
-        const brequired = variableRefRewrite(item.required)
+        const brequired = BItem.variableRefRewrite(item.required)
         const script = `{
           try {
             return (${brequired})
@@ -138,17 +130,17 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         console.log('required: ' + script)
         try {
           //bitem0.dynamicProps = bitem0.dynamicProps ? bitem0.dynamicProps.push('required') : ['required']
-          bitem0.required = new Function('return (val, { formData, updateField }) => ' + script)();
+          bitem0.required = new Function('return (val, { formData, updateField }) => ' + script)()
         } catch (err) {
           console.error(err)
         }
       }
     }
-    return bitem;
-  };
+    return bitem
+  }
 
-  const prefix = options.prefix ? options.prefix + '.' : '';
-  const bschema = [];
+  const prefix = options.prefix ? options.prefix + '.' : ''
+  const bschema = []
   if (schema.items) {
     schema.items.forEach(item => {
       const bitem = makeBItem(item, prefix)
@@ -164,7 +156,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     })
   }
   console.log(bschema)
-  return bschema;
+  return bschema
 }
   
 export default makeBlitzarQuasarSchemaForm
