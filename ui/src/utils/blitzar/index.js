@@ -20,8 +20,17 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     new SectionBItem(tr)
   ]
 
+  // rewrites $('VAR') to formData.VAR
+  const variableRefRewrite = (script) => { 
+    const doRewrite = (match, p1, offset, string) => {
+      // console.log([match, p1, offset, string].join(', '))
+      return 'formData.' + p1;
+    }
+    return script ? script.replace(/\$\('([\w\.]+)'\)/g, doRewrite) : script
+  }
+
   const makeBItem = (item, prefix, parentCondition) => {
-    const condition = item.condition ? (parentCondition ? `(${parentCondition}) && (${item.condition})` : `${item.condition}`) : parentCondition
+    let condition = (item.condition ? (parentCondition ? `(${parentCondition}) && (${item.condition})` : `${item.condition}`) : parentCondition)
     let bitem = undefined;
     const builder = builders.filter(b => b.isFor(item.type)).pop()
     if (builder) {
@@ -55,10 +64,12 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     if (bitem) {
       const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem;
       console.log('>>> ' + bitem0.id)
+      
       if (bitem0 && item.validation) {
+        const bvalidation = variableRefRewrite(item.validation)
         const script = `{
           try {
-            return !(${item.validation})
+            return !(${bvalidation})
           } catch (err) {
             return false
           }
@@ -79,9 +90,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       }
       
       if (bitem0 && condition) {
+        const bcondition = variableRefRewrite(condition)
         const script = `{
           try {
-            const rval = ${condition}
+            const rval = ${bcondition}
             if (!rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
             return rval
           } catch (err) {
@@ -96,10 +108,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         }
       }
       if (bitem0 && item.disabled) {
-        
+        const bdisabled = variableRefRewrite(item.disabled)
         const script = `{
           try {
-            const rval = (${item.disabled})
+            const rval = (${bdisabled})
             if (rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
             return rval
           } catch (err) {
@@ -115,9 +127,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         }
       }
       if (bitem0 && item.required) {
+        const brequired = variableRefRewrite(item.required)
         const script = `{
           try {
-            return (${item.required})
+            return (${brequired})
           } catch (err) {
             return false
           }

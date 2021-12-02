@@ -25,18 +25,16 @@ export default {
   emits: ['update:modelValue', 'new-value'],
   
   setup(props, { emit }) {
-    console.log(props)
-    
     const filterOptions = ref([])
 
     const filterFn = (val, update) => {
         update(() => {
-            if (val === '') {
+            if (val.length < 2) {
                 filterOptions.value = []
             }
             else {
                 const needle = val.toLowerCase()
-                filterOptions.value = props.options.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
+                filterOptions.value = props.options.filter(v => v.label.toLowerCase().indexOf(needle) > -1).slice(0, 10)
             }
         })
     }
