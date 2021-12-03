@@ -16,7 +16,7 @@ class SectionBItem extends BItem {
             component: 'div',
             id: (prefix + item.name).replaceAll('.', '_').toLowerCase(),
             slot: this.tr(item.label),
-            class: item.labelClass ? item.labelClass : 'text-h3'
+            class: item.labelClass ? item.labelClass : 'text-h4'
           },
           {
             component: 'div',

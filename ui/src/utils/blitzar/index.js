@@ -39,7 +39,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
             component: 'div',
             id: (prefix + item.name).replaceAll('.', '_').toLowerCase(),
             slot: tr(item.label),
-            class: item.labelClass ? item.labelClass : 'text-h4'
+            class: item.labelClass ? item.labelClass : 'text-h5'
           },
           {
             component: 'div',

@@ -522,10 +522,9 @@ export default {
       this.errors = undefined
     },
     nextStep () {
-      const fieldIds = getBlitzarIdsAt(this.schema, this.model.__step)
       const result = validateFormPerSchema(this.model, this.generatedSchema)
       this.errors = Object.keys(result)
-        .filter(key => fieldIds.includes(key) && result[key] !== null)
+        .filter(key => result[key] !== null)
         .reduce((obj, key) => {
           obj[key] = result[key];
           return obj;
