@@ -7,7 +7,7 @@ function makeSchemaFormTr(schema, options) {
           undefined)) : 
       undefined;
     
-    console.log('Translating to ' + locale);
+    if (options.debug) console.debug('Translating to ' + locale);
   
     return (key) => {
       let rval = key

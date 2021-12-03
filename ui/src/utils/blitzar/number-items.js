@@ -15,7 +15,7 @@ class NumberBItem extends BItem {
             subLabel: this.tr(item.description),
             hint: this.tr(item.hint),
             parseInput: Number,
-            defaultValue: Number.parseFloat(item.default),
+            defaultValue: item.default ? Number.parseFloat(item.default) : undefined,
         }
     }
 }
@@ -32,7 +32,7 @@ class SliderBItem extends BItem {
             component: 'QSlider',
             label: this.tr(item.label),
             subLabel: this.tr(item.description),
-            defaultValue: Number.parseFloat(item.default),
+            defaultValue: item.default ? Number.parseFloat(item.default) : undefined,
             // component props:
             min: item.min ? item.min : 0,
             max: item.max ? item.max : 100,
@@ -60,7 +60,7 @@ class RatingBItem extends BItem {
             color: item.color ? item.color : "primary",
             size: item.size ? item.size : "2em",
             parseValue: Number,
-            defaultValue: Number.parseFloat(item.default),
+            defaultValue: item.default ? Number.parseFloat(item.default) : undefined
         }
     }
 }

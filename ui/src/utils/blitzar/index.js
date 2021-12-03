@@ -10,7 +10,8 @@ import { SectionBItem, ComputedBItem } from './misc-bitems'
 
 function makeBlitzarQuasarSchemaForm(schema, options) {
   const tr = makeSchemaFormTr(schema, options)
-  
+  let stepCount = 0
+
   const builders = [
     new TextBItem(tr), new TextAreaBItem(tr), 
     new NumberBItem(tr), new SliderBItem(tr), new RatingBItem(tr), 
@@ -21,9 +22,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     new SectionBItem(tr), new ComputedBItem(tr)
   ]
 
-  const makeBItem = (item, prefix, parentCondition) => {
-    let condition = (item.condition ? (parentCondition ? `(${parentCondition}) && (${item.condition})` : `${item.condition}`) : parentCondition)
+  const makeBItem = (item, prefix, parentLogicalCondition, showCondition) => {
+    let logicalCondition = (item.condition ? (parentLogicalCondition ? `(${parentLogicalCondition}) && (${item.condition})` : `${item.condition}`) : parentLogicalCondition)
     let bitem = undefined
+    
     const builder = builders.filter(b => b.isFor(item.type)).pop()
     if (builder) {
       bitem = builder.makeBItem(item, prefix)
@@ -48,14 +50,14 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       })
       if (item.items) {
         item.items.forEach(child => {
-            bitem.push(makeBItem(child, prefix + item.name + '.', condition))
+            bitem.push(makeBItem(child, prefix + item.name + '.', logicalCondition, showCondition))
         })
       }
     }
 
     if (bitem) {
       const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem
-      console.log('>>> ' + bitem0.id)
+      if (options.debug) console.debug('>>> ' + bitem0.id)
 
       // validation
       if (bitem0 && item.validation) {
@@ -64,38 +66,54 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           try {
             return !(${bvalidation})
           } catch (err) {
+            console.error('${bitem0.id}.validation eval error')
+            console.error(err)
             return false
           }
         }`
-        console.log('validation: ' + script)
+        if (options.debug) console.debug('validation: ' + script)
         try {
           bitem0.error = new Function('return (val, { formData }) => ' + script)()
-          if (!bitem0.dynamicProps)
-            bitem0.dynamicProps = []
-          bitem0.dynamicProps.push('error')
+          bitem0.dynamicProps = ['error']
           if (item.validationMessage)
-            bitem0['error-message'] = tr(item.validationMessage)
+            bitem0.errorMessage = tr(item.validationMessage)
           else  
-            bitem0['error-message'] = tr('Error')
+            bitem0.errorMessage = tr('Error')
         } catch (err) {
           console.error(err)
         }
       }
       
-      // condition
-      if (bitem0 && condition) {
-        const bcondition = BItem.variableRefRewrite(condition)
-        const script = `{
-          try {
-            const rval = ${bcondition}
-            if (!rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
-            return rval
-          } catch (err) {
-            return false
-          }
-        }`
-        console.log('condition: ' + script)
+      // conditions: logical and show
+      if (bitem0 && (logicalCondition || showCondition)) {
+        let script
+        if (logicalCondition) {
+          const bcondition = BItem.variableRefRewrite(logicalCondition)
+          script = `{
+            try {
+              const rval = ${bcondition}
+              if (!rval && updateField) { updateField({ id: '${bitem0.id}', value: undefined }) }
+              return (${showCondition}) === undefined ? rval : ((${showCondition}) && rval)
+            } catch (err) {
+              console.error('${bitem0.id}.condition eval error')
+              console.error(err)
+              return false
+            }
+          }`
+        } else {
+          script = `{
+            try {
+              return ${showCondition}
+            } catch (err) {
+              console.error('${bitem0.id}.condition eval error')
+              console.error(err)
+              return false
+            }
+          }`
+        }
+        if (options.debug) console.debug('condition: ' + script)
         try {
+          bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'showCondition'] : ['showCondition']
           bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)()
         } catch (err) {
           console.error(err)
@@ -111,12 +129,14 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
             if (rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
             return rval
           } catch (err) {
+            console.error('${bitem0.id}.disabled eval error')
+            console.error(err)
             return false
           }
         }`
-        console.log('disabled: ' + script)
+        if (options.debug) console.debug('disabled: ' + script)
         try {
-          bitem0.dynamicProps = bitem0.dynamicProps ? bitem0.dynamicProps.push('disabled') : ['disabled']
+          bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'disabled'] : ['disabled']
           bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)()
         } catch (err) {
           console.error(err)
@@ -124,18 +144,20 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       }
 
       // required
-      if (bitem0 && item.required) {
-        const brequired = BItem.variableRefRewrite(item.required)
+      if (bitem0) {
+        let brequired = item.required ? BItem.variableRefRewrite(item.required) : 'false'
         const script = `{
           try {
             return (${brequired})
           } catch (err) {
+            console.error('${bitem0.id}.required eval error')
+            console.error(err)
             return false
           }
         }`
-        console.log('required: ' + script)
+        if (options.debug) console.debug('required: ' + script)
         try {
-          //bitem0.dynamicProps = bitem0.dynamicProps ? bitem0.dynamicProps.push('required') : ['required']
+          bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'required'] : ['required']
           bitem0.required = new Function('return (val, { formData, updateField }) => ' + script)()
         } catch (err) {
           console.error(err)
@@ -149,20 +171,39 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
   const bschema = []
   if (schema.items) {
     schema.items.forEach(item => {
-      const bitem = makeBItem(item, prefix)
+      const showCondition = options.stepId ? `formData.${options.stepId} === ${stepCount}` : undefined
+      const bitem = makeBItem(item, prefix, undefined, showCondition)
       if (bitem) {
         if (Array.isArray(bitem)) {
           bitem.forEach(item => bschema.push(item))
         } else {
           bschema.push(bitem)
         }
+        stepCount++
       } else {
         console.error('Can\'t make a Blitzar/Quasar item from ' + JSON.stringify(item, null, ' '))
       }
     })
   }
-  console.log(bschema)
+  if (options.debug) console.debug(bschema)
   return bschema
 }
+
+// blitzar ids from amber schema names
+function getBlitzarIdsAt(schema, position) {
+  const stepItem = schema.items[position]
+  // concat items names recursively
+  const getItemNames = (item) => {
+      if (item.items) {
+      const names = []
+      item.items.forEach(i => {
+          getItemNames(i).forEach(name => names.push(name))
+      })
+      return names.map(name => item.name + '.' + name)
+      }
+      return [item.name]
+  }
+  return getItemNames(stepItem)
+}
   
-export default makeBlitzarQuasarSchemaForm
+export { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt }
