@@ -66,8 +66,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           try {
             return !(${bvalidation})
           } catch (err) {
-            console.error('${bitem0.id}.validation eval error')
-            console.error(err)
+            if (${options.debug}) {
+              console.error('${bitem0.id}.validation eval error')
+              console.error(err)
+            }
             return false
           }
         }`
@@ -95,8 +97,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
               if (!rval && updateField) { updateField({ id: '${bitem0.id}', value: undefined }) }
               return (${showCondition}) === undefined ? rval : ((${showCondition}) && rval)
             } catch (err) {
-              console.error('${bitem0.id}.condition eval error')
-              console.error(err)
+              if (${options.debug}) {
+                console.error('${bitem0.id}.condition eval error')
+                console.error(err)
+              }
               return false
             }
           }`
@@ -104,9 +108,11 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           script = `{
             try {
               return ${showCondition}
-            } catch (err) {
-              console.error('${bitem0.id}.condition eval error')
-              console.error(err)
+            } catch (err) {            
+              if (${options.debug}) {
+                console.error('${bitem0.id}.condition eval error')
+                console.error(err)
+              }
               return false
             }
           }`
@@ -129,8 +135,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
             if (rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
             return rval
           } catch (err) {
-            console.error('${bitem0.id}.disabled eval error')
-            console.error(err)
+            if (${options.debug}) {
+              console.error('${bitem0.id}.disabled eval error')
+              console.error(err)
+            }
             return false
           }
         }`
@@ -150,8 +158,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           try {
             return (${brequired})
           } catch (err) {
-            console.error('${bitem0.id}.required eval error')
-            console.error(err)
+            if (${options.debug}) {
+              console.error('${bitem0.id}.required eval error')
+              console.error(err)
+            }
             return false
           }
         }`
