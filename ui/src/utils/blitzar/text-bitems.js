@@ -14,7 +14,8 @@ class TextBItem extends BItem {
             subLabel: this.tr(item.description),
             placeholder: this.tr(item.placeholder),
             hint: this.tr(item.hint),
-            defaultValue: item.default
+            defaultValue: item.default,
+            mask: item.mask
         }
     }
 }
