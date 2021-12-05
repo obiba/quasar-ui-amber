@@ -15,12 +15,12 @@ class RadioGroupBItem extends BItem {
         subLabel: this.tr(item.description),
         defaultValue: item.default,
         // component props:
-        options: item.options.map(opt => {
+        options: item.options ? item.options.map(opt => {
           return {
             value: opt.value,
             label: this.tr(opt.label)
           }
-        })
+        }) : []
       }
     }
 }
@@ -40,12 +40,12 @@ class CheckboxGroupBItem extends BItem {
         defaultValue: BItem.stringToArray(item.default),
         // component props:
         type: 'checkbox',
-        options: item.options.map(opt => {
+        options: item.options ? item.options.map(opt => {
           return {
             value: opt.value,
             label: this.tr(opt.label)
           }
-        })
+        }) : []
       }
     }
 

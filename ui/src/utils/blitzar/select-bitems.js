@@ -15,12 +15,12 @@ class SelectBItem extends BItem {
         hint: this.tr(item.hint),
         defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
         // component props:
-        options: item.options.map(opt => {
+        options: item.options ? item.options.map(opt => {
           return {
             value: opt.value,
             label: this.tr(opt.label)
           }
-        }),
+        }) : [],
         'emit-value': true,
         'map-options': true,
         clearable: true,
@@ -45,12 +45,12 @@ class AutocompleteBItem extends BItem {
       hint: this.tr(item.hint),
       defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
       // component props:
-      options: item.options.map(opt => {
+      options: item.options ? item.options.map(opt => {
         return {
           value: opt.value,
           label: this.tr(opt.label)
         }
-      }),
+      }) : [],
       multiple: item.multiple
     }
   }
