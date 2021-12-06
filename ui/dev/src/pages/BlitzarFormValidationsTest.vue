@@ -23,15 +23,75 @@ import { makeBlitzarQuasarSchemaForm } from 'ui'
 const schema = {
   items: [
     {
+      name: "TEXT0",
+      type: "text",
+      label: "Text not required, with validation, no hint",
+      required: "false",
+      validation: "val === undefined || val === null || val.length === 0 || val.length > 3",
+      validationMessage: "Text is not required must have a minimum length of 4 chars."
+    },
+    {
       name: "TEXT",
       type: "text",
-      label: "Text label",
-      description: "Text description",
-      placeholder: "Text placeholder",
+      label: "Text not required, with validation",
+      hint: "Text hint",
+      required: "false",
+      validation: "val === undefined || val === null || val.length === 0 || val.length > 3",
+      validationMessage: "Text is not required must have a minimum length of 4 chars."
+    },
+    {
+      name: "TEXT2",
+      type: "text",
+      label: "Text required, with validation",
       hint: "Text hint",
       required: "true",
       validation: "val && val.length > 3",
       validationMessage: "Text is required and must have a minimum length of 4 chars."
+    },
+    {
+      name: "TEXT21",
+      type: "text",
+      label: "Text required, with validation but no validation message",
+      hint: "Text hint",
+      required: "true",
+      validation: "val && val.length > 3"
+    },
+    {
+      name: "TEXT22",
+      type: "text",
+      label: "Text required, with validation but with empty validation message",
+      hint: "Text hint",
+      required: "true",
+      validation: "val && val.length > 3",
+      validationMessage: undefined
+    },
+    {
+      name: "TEXT3",
+      type: "text",
+      label: "Text required, without validation",
+      hint: "Text hint",
+      required: "true"
+    },
+    {
+      name: 'SELECT',
+      type: 'select',
+      label: 'Select required',
+      hint: 'Select hint',
+      required: 'true',
+      options: [
+        {
+          value: '1',
+          label: 'NYC'
+        },
+        {
+          value: '2',
+          label: 'MTL'
+        },
+        {
+          value: '3',
+          label: 'LYS'
+        }
+      ]
     }
   ],
   i18n: {}
@@ -45,7 +105,7 @@ export default {
       errorsRemain: ref(false),
       errors: ref({}),
       model: ref({}),
-      generatedSchema: makeBlitzarQuasarSchemaForm(schema, { locale: 'en' })
+      generatedSchema: makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true })
     }
   },
   methods: {
