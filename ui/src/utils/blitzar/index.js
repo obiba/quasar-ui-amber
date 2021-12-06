@@ -153,18 +153,23 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
 
       // required
       if (bitem0) {
-        let brequired = item.required ? BItem.variableRefRewrite(item.required) : 'false'
-        const script = `{
-          try {
-            return (${brequired})
-          } catch (err) {
-            if (${options.debug}) {
-              console.error('${bitem0.id}.required eval error')
-              console.error(err)
+        let brequired = item.required ? BItem.variableRefRewrite(item.required) : false
+        let script = ''
+        if (typeof brequired === 'boolean') {
+          script = `${brequired}`
+        } else {
+          script = `{
+            try {
+              return (${brequired})
+            } catch (err) {
+              if (${options.debug}) {
+                console.error('${bitem0.id}.required eval error')
+                console.error(err)
+              }
+              return false
             }
-            return false
-          }
-        }`
+          }`
+        }
         if (options.debug) console.debug('required: ' + script)
         try {
           bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'required'] : ['required']

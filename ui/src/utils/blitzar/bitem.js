@@ -10,7 +10,6 @@ class BItem {
             // console.log([match, p1, offset, string].join(', '))
             return 'formData.' + p1;
         }
-        console.log(script)
         return script && typeof script === 'string' ? script.replace(/\$\('([\w\.]+)'\)/g, doRewrite) : script
     }
 

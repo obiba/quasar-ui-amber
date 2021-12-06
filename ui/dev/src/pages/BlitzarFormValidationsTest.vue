@@ -26,7 +26,7 @@ const schema = {
       name: "TEXT0",
       type: "text",
       label: "Text not required, with validation, no hint",
-      required: "false",
+      required: false,
       validation: "val === undefined || val === null || val.length === 0 || val.length > 3",
       validationMessage: "Text is not required must have a minimum length of 4 chars."
     },
@@ -35,7 +35,7 @@ const schema = {
       type: "text",
       label: "Text not required, with validation",
       hint: "Text hint",
-      required: "false",
+      required: false,
       validation: "val === undefined || val === null || val.length === 0 || val.length > 3",
       validationMessage: "Text is not required must have a minimum length of 4 chars."
     },
@@ -44,7 +44,7 @@ const schema = {
       type: "text",
       label: "Text required, with validation",
       hint: "Text hint",
-      required: "true",
+      required: true,
       validation: "val && val.length > 3",
       validationMessage: "Text is required and must have a minimum length of 4 chars."
     },
@@ -53,7 +53,7 @@ const schema = {
       type: "text",
       label: "Text required, with validation but no validation message",
       hint: "Text hint",
-      required: "true",
+      required: true,
       validation: "val && val.length > 3"
     },
     {
@@ -61,7 +61,7 @@ const schema = {
       type: "text",
       label: "Text required, with validation but with empty validation message",
       hint: "Text hint",
-      required: "true",
+      required: true,
       validation: "val && val.length > 3",
       validationMessage: undefined
     },
@@ -70,14 +70,14 @@ const schema = {
       type: "text",
       label: "Text required, without validation",
       hint: "Text hint",
-      required: "true"
+      required: true
     },
     {
       name: 'SELECT',
       type: 'select',
       label: 'Select required',
       hint: 'Select hint',
-      required: 'true',
+      required: true,
       options: [
         {
           value: '1',
