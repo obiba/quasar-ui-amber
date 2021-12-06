@@ -14,7 +14,6 @@ class SelectBItem extends BItem {
         subLabel: this.tr(item.description),
         hint: this.tr(item.hint),
         defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
-        // component props:
         options: item.options ? item.options.map(opt => {
           return {
             value: opt.value,
@@ -25,7 +24,8 @@ class SelectBItem extends BItem {
         'map-options': true,
         clearable: true,
         'use-chips': item.multiple,
-        multiple: item.multiple
+        multiple: item.multiple,
+        labelClasses: item.labelClass
       }
     }
 }
@@ -44,14 +44,14 @@ class AutocompleteBItem extends BItem {
       subLabel: this.tr(item.description),
       hint: this.tr(item.hint),
       defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
-      // component props:
       options: item.options ? item.options.map(opt => {
         return {
           value: opt.value,
           label: this.tr(opt.label)
         }
       }) : [],
-      multiple: item.multiple
+      multiple: item.multiple,
+      labelClasses: item.labelClass
     }
   }
 }

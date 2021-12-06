@@ -15,7 +15,8 @@ class TextBItem extends BItem {
             placeholder: this.tr(item.placeholder),
             hint: this.tr(item.hint),
             defaultValue: item.default,
-            mask: item.mask
+            mask: item.mask,
+            labelClasses: item.labelClass
         }
     }
 }
@@ -35,7 +36,8 @@ class TextAreaBItem extends BItem {
             subLabel: this.tr(item.description),
             placeholder: this.tr(item.placeholder),
             hint: this.tr(item.hint),
-            defaultValue: item.default
+            defaultValue: item.default,
+            labelClasses: item.labelClass
         }
     }
 }
