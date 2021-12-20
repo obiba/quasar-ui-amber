@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { BlitzForm, validateFormPerSchema } from '@blitzar/form'
+import { BlitzForm, validateFormPerSchema } from 'blitzar'
 import { ref } from 'vue'
 import { makeBlitzarQuasarSchemaForm } from 'ui'
 
