@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { BlitzForm } from 'blitzar'
+import { BlitzForm } from '@blitzar/form'
 import { ref } from 'vue'
 import { makeBlitzarQuasarSchemaForm } from 'ui'
 
