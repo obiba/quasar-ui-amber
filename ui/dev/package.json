@@ -28,6 +28,6 @@
     "yarn": ">= 1.6.0"
   },
   "dependencies": {
-    "blitzar": "^1.0.6"
+    "blitzar": "^1.0.10"
   }
 }
