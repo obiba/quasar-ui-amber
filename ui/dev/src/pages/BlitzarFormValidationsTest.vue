@@ -18,7 +18,7 @@
 <script>
 import { BlitzForm, validateFormPerSchema } from '@blitzar/form'
 import { ref } from 'vue'
-import { makeBlitzarQuasarSchemaForm } from 'ui'
+import { makeBlitzarQuasarSchemaForm, getBlitzarErrors } from 'ui'
 
 const schema = {
   items: [
@@ -103,7 +103,7 @@ export default {
     return {
       remountCounter: 0,
       errorsRemain: ref(false),
-      errors: ref({}),
+      errors: ref([]),
       model: ref({}),
       generatedSchema: makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true })
     }
@@ -111,14 +111,8 @@ export default {
   methods: {
     onValidate () {
       const result = validateFormPerSchema(this.model, this.generatedSchema)
-      console.log(result)
-      this.errors = Object.keys(result)
-        .filter(key => result[key] !== null)
-        .reduce((obj, key) => {
-          obj[key] = result[key];
-          return obj;
-        }, {})
-      this.errorsRemain = this.errors && Object.keys(this.errors).length > 0
+      this.errors = getBlitzarErrors(this.generatedSchema, result)
+      this.errorsRemain = this.errors.length > 0
     }
   }
 }

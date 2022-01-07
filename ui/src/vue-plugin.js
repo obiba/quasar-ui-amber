@@ -2,7 +2,7 @@ import QAAutocomplete from './components/QAAutocomplete'
 import QADate from './components/QADate'
 import QADatetime from './components/QADatetime'
 import QATime from './components/QATime'
-import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt } from './utils/blitzar'
+import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors } from './utils/blitzar'
 import makeSchemaFormTr from './utils/i18n'
 import { QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 'quasar'
 
@@ -30,6 +30,7 @@ export {
   makeBlitzarQuasarSchemaForm,
   getBlitzarIdsAt,
   makeSchemaFormTr,
+  getBlitzarErrors,
 
   install
 }

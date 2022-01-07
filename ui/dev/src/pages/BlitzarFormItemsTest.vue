@@ -1,7 +1,13 @@
 <template>
   <q-page padding>
+    <div class="q-mb-md">
+      <q-btn icon="done" @click="onValidate"/>
+    </div>
     <div>
       <BlitzForm :key='remountCounter' :schema='generatedSchema' v-model='model' :columnCount='1' gridGap='32px'/>
+    </div>
+    <div v-if="errorsRemain" class="bg-red-6 text-white q-mt-lg q-pa-md">
+      <pre>{{ JSON.stringify(errors, null, '  ') }}</pre>
     </div>
     <div class="bg-black text-white q-mt-lg q-pa-md">
       <pre>{{ JSON.stringify(model, null, '  ') }}</pre>
@@ -10,9 +16,9 @@
 </template>
 
 <script>
-import { BlitzForm } from '@blitzar/form'
+import { BlitzForm, validateFormPerSchema } from '@blitzar/form'
 import { ref } from 'vue'
-import { makeBlitzarQuasarSchemaForm } from 'ui'
+import { makeBlitzarQuasarSchemaForm, getBlitzarErrors } from 'ui'
 
 const schema = {
   items: [
@@ -22,7 +28,8 @@ const schema = {
       label: 'Text label',
       description: 'Text description',
       placeholder: 'Text placeholder',
-      hint: 'Text hint'
+      hint: 'Text hint',
+      required: true
     },
     {
       name: 'TEXTAREA',
@@ -30,7 +37,8 @@ const schema = {
       label: 'Text area label',
       description: 'Text area description',
       placeholder: 'Text area placeholder',
-      hint: 'Text area hint'
+      hint: 'Text area hint',
+      required: true
     },
     {
       name: 'NUMBER',
@@ -38,7 +46,7 @@ const schema = {
       label: 'Number label',
       description: 'Number description',
       hint: 'Number hint',
-      default: '123'
+      required: true
     },
     {
       name: 'DATE',
@@ -46,7 +54,8 @@ const schema = {
       label: 'Date label',
       description: 'Date description',
       placeholder: 'Date placeholder',
-      hint: 'Date hint'
+      hint: 'Date hint',
+      required: true
     },
     {
       name: 'GROUP',
@@ -60,7 +69,8 @@ const schema = {
           label: 'Datetime label',
           description: 'Datetime description',
           placeholder: 'Datetime placeholder',
-          hint: 'Datetime hint'
+          hint: 'Datetime hint',
+          required: true
         },
         {
           name: 'TIME',
@@ -68,7 +78,8 @@ const schema = {
           label: 'Time label',
           description: 'Time description',
           placeholder: 'Time placeholder',
-          hint: 'Time hint'
+          hint: 'Time hint',
+          required: true
         }
       ]
     },
@@ -86,7 +97,8 @@ const schema = {
           value: '2',
           label: 'female'
         }
-      ]
+      ],
+      required: true
     },
     {
       name: 'CHECKBOXGROUP',
@@ -106,7 +118,8 @@ const schema = {
           value: '3',
           label: 'plane'
         }
-      ]
+      ],
+      required: true
     },
     {
       name: 'SELECT',
@@ -127,7 +140,8 @@ const schema = {
           value: '3',
           label: 'LYS'
         }
-      ]
+      ],
+      required: true
     },
     {
       name: 'MULTISELECT',
@@ -149,7 +163,8 @@ const schema = {
           label: 'alligator'
         }
       ],
-      multiple: true
+      multiple: true,
+      required: true
     },
     {
       name: 'AUTOCOMPLETE',
@@ -174,7 +189,8 @@ const schema = {
           value: '4',
           label: 'elephant'
         }
-      ]
+      ],
+      required: true
     },
     {
       name: 'MULTIAUTOCOMPLETE',
@@ -200,13 +216,15 @@ const schema = {
           label: 'elephant'
         }
       ],
-      multiple: true
+      multiple: true,
+      required: true
     },
     {
       name: 'TOGGLE',
       type: 'toggle',
       label: 'Toggle label',
-      description: 'Toggle description'
+      description: 'Toggle description',
+      required: true
     },
     {
       name: 'SECTION',
@@ -223,7 +241,8 @@ const schema = {
       description: 'Slider description',
       min: 10,
       max: 20,
-      format: ''
+      format: '',
+      required: true
     },
     {
       name: 'RATING',
@@ -231,7 +250,8 @@ const schema = {
       label: 'Rating label',
       description: 'Rating description',
       max: 10,
-      icon: 'stars'
+      icon: 'stars',
+      required: true
     }
   ],
   i18n: {}
@@ -242,8 +262,17 @@ export default {
   setup () {
     return {
       remountCounter: 0,
+      errorsRemain: ref(false),
+      errors: ref([]),
       model: ref({}),
-      generatedSchema: makeBlitzarQuasarSchemaForm(schema, { locale: 'en' })
+      generatedSchema: makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true })
+    }
+  },
+  methods: {
+    onValidate () {
+      const result = validateFormPerSchema(this.model, this.generatedSchema)
+      this.errors = getBlitzarErrors(this.generatedSchema, result)
+      this.errorsRemain = this.errors.length > 0
     }
   }
 }

@@ -59,106 +59,16 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       const bitem0 = Array.isArray(bitem) ? bitem[0] : bitem
       if (options.debug) console.debug('>>> ' + bitem0.id)
 
-      // validation
-      if (bitem0 && item.validation) {
-        const bvalidation = BItem.variableRefRewrite(item.validation)
-        const script = `{
-          try {
-            return !(${bvalidation})
-          } catch (err) {
-            if (${options.debug}) {
-              console.error('${bitem0.id}.validation eval error')
-              console.error(err)
-            }
-            return false
-          }
-        }`
-        if (options.debug) console.debug('validation: ' + script)
-        try {
-          bitem0.error = new Function('return (val, { formData }) => ' + script)()
-          bitem0.dynamicProps = ['error']
-          if (item.validationMessage)
-            bitem0.errorMessage = tr(item.validationMessage)
-          else  
-            bitem0.errorMessage = tr('Error')
-        } catch (err) {
-          console.error(err)
-        }
-      }
-      
-      // conditions: logical and show
-      if (bitem0 && (logicalCondition || showCondition)) {
-        let script
-        if (logicalCondition) {
-          const bcondition = BItem.variableRefRewrite(logicalCondition)
-          script = `{
-            try {
-              const rval = ${bcondition}
-              if (!rval && updateField) { updateField({ id: '${bitem0.id}', value: undefined }) }
-              return (${showCondition}) === undefined ? rval : ((${showCondition}) && rval)
-            } catch (err) {
-              if (${options.debug}) {
-                console.error('${bitem0.id}.condition eval error')
-                console.error(err)
-              }
-              return false
-            }
-          }`
-        } else {
-          script = `{
-            try {
-              return ${showCondition}
-            } catch (err) {            
-              if (${options.debug}) {
-                console.error('${bitem0.id}.condition eval error')
-                console.error(err)
-              }
-              return false
-            }
-          }`
-        }
-        if (options.debug) console.debug('condition: ' + script)
-        try {
-          bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'showCondition'] : ['showCondition']
-          bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)()
-        } catch (err) {
-          console.error(err)
-        }
-      }
-
-      // disabled
-      if (bitem0 && item.disabled) {
-        const bdisabled = BItem.variableRefRewrite(item.disabled)
-        const script = `{
-          try {
-            const rval = (${bdisabled})
-            if (rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
-            return rval
-          } catch (err) {
-            if (${options.debug}) {
-              console.error('${bitem0.id}.disabled eval error')
-              console.error(err)
-            }
-            return false
-          }
-        }`
-        if (options.debug) console.debug('disabled: ' + script)
-        try {
-          bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'disabled'] : ['disabled']
-          bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)()
-        } catch (err) {
-          console.error(err)
-        }
-      }
-
-      // required
       if (bitem0) {
+        // required
         let brequired = item.required ? BItem.variableRefRewrite(item.required) : false
-        let script = ''
+        let requiredScript = undefined
         if (typeof brequired === 'boolean') {
-          script = `${brequired}`
+          if (brequired) {
+            requiredScript = 'val === null || val === undefined || val === "" || (Array.isArray(val) && val.length === 0)'
+          }
         } else {
-          script = `{
+          requiredScript = `{
             try {
               return (${brequired})
             } catch (err) {
@@ -170,14 +80,109 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
             }
           }`
         }
-        if (options.debug) console.debug('required: ' + script)
-        try {
-          bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'required'] : ['required']
-          bitem0.required = new Function('return (val, { formData, updateField }) => ' + script)()
-        } catch (err) {
-          console.error(err)
+        if (requiredScript) {
+          if (options.debug) console.debug('required: ' + requiredScript)
+          try {
+            bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'required'] : ['required']
+            bitem0.required = new Function('return (val, { formData, updateField }) => ' + requiredScript)()
+          } catch (err) {
+            console.error(err)
+          }
+        }
+
+        // validation
+        if (item.validation) {
+          const bvalidation = BItem.variableRefRewrite(item.validation)
+          const script = `{
+            try {
+              return !(${bvalidation})
+            } catch (err) {
+              if (${options.debug}) {
+                console.error('${bitem0.id}.validation eval error')
+                console.error(err)
+              }
+              return false
+            }
+          }`
+          if (options.debug) console.debug('validation: ' + script)
+          try {
+            bitem0.error = new Function('return (val, { formData }) => ' + script)()
+            bitem0.dynamicProps = ['error']
+            if (item.validationMessage)
+              bitem0.errorMessage = tr(item.validationMessage)
+            else
+              bitem0.errorMessage = tr('Error')
+          } catch (err) {
+            console.error(err)
+          }
+        }
+
+        // conditions: logical and show
+        if (logicalCondition || showCondition) {
+          let script
+          if (logicalCondition) {
+            const bcondition = BItem.variableRefRewrite(logicalCondition)
+            script = `{
+              try {
+                const rval = ${bcondition}
+                if (!rval && updateField) { updateField({ id: '${bitem0.id}', value: undefined }) }
+                return (${showCondition}) === undefined ? rval : ((${showCondition}) && rval)
+              } catch (err) {
+                if (${options.debug}) {
+                  console.error('${bitem0.id}.condition eval error')
+                  console.error(err)
+                }
+                return false
+              }
+            }`
+          } else {
+            script = `{
+              try {
+                return ${showCondition}
+              } catch (err) {
+                if (${options.debug}) {
+                  console.error('${bitem0.id}.condition eval error')
+                  console.error(err)
+                }
+                return false
+              }
+            }`
+          }
+          if (options.debug) console.debug('condition: ' + script)
+          try {
+            bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'showCondition'] : ['showCondition']
+            bitem0.showCondition = new Function('return (val, { formData, updateField }) => ' + script)()
+          } catch (err) {
+            console.error(err)
+          }
+        }
+
+        // disabled
+        if (item.disabled) {
+          const bdisabled = BItem.variableRefRewrite(item.disabled)
+          const script = `{
+            try {
+              const rval = (${bdisabled})
+              if (rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
+              return rval
+            } catch (err) {
+              if (${options.debug}) {
+                console.error('${bitem0.id}.disabled eval error')
+                console.error(err)
+              }
+              return false
+            }
+          }`
+          if (options.debug) console.debug('disabled: ' + script)
+          try {
+            bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'disabled'] : ['disabled']
+            bitem0.disabled = new Function('return (val, { formData, updateField }) => ' + script)()
+          } catch (err) {
+            console.error(err)
+          }
         }
       }
+
     }
     return bitem
   }
@@ -220,5 +225,28 @@ function getBlitzarIdsAt(schema, position) {
   }
   return getItemNames(stepItem)
 }
-  
-export { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt }
+
+// explicit the list of validation errors
+function getBlitzarErrors(blitzarSchema, validationResult) {
+  // remove nulls  
+  const errorsObj = Object.keys(validationResult)
+    .filter(key => validationResult[key] !== null)
+    .reduce((obj, key) => {
+      obj[key] = validationResult[key];
+      return obj;
+    }, {})
+  const errorsList = []
+  for (const id in errorsObj) {
+    const item = blitzarSchema.filter(item => item.id === id).pop()
+    if (item) {
+      errorsList.push({
+        id: id,
+        label: item.label,
+        message: errorsObj[id]
+      })
+    }
+  }
+  return errorsList
+}
+
+export { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors }
