@@ -62,13 +62,10 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       if (bitem0) {
         // required
         let brequired = item.required ? BItem.variableRefRewrite(item.required) : false
-        let requiredScript = undefined
         if (typeof brequired === 'boolean') {
-          if (brequired) {
-            requiredScript = 'val === null || val === undefined || val === "" || (Array.isArray(val) && val.length === 0)'
-          }
+          bitem0.required = brequired
         } else {
-          requiredScript = `{
+          const requiredScript = `{
             try {
               return (${brequired})
             } catch (err) {
@@ -79,8 +76,6 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
               return false
             }
           }`
-        }
-        if (requiredScript) {
           if (options.debug) console.debug('required: ' + requiredScript)
           try {
             bitem0.dynamicProps = bitem0.dynamicProps ? [...bitem0.dynamicProps, 'required'] : ['required']

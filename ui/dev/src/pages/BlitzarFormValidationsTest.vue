@@ -92,6 +92,28 @@ const schema = {
           label: 'LYS'
         }
       ]
+    },
+    {
+      name: 'MULTISELECT',
+      type: 'select',
+      label: 'Multiselect required',
+      hint: 'Multiselect hint',
+      required: true,
+      options: [
+        {
+          value: '1',
+          label: 'NYC'
+        },
+        {
+          value: '2',
+          label: 'MTL'
+        },
+        {
+          value: '3',
+          label: 'LYS'
+        }
+      ],
+      multiple: true
     }
   ],
   i18n: {}
