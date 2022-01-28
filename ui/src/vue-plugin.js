@@ -1,6 +1,7 @@
 import QAAutocomplete from './components/QAAutocomplete'
 import QADate from './components/QADate'
 import QADatetime from './components/QADatetime'
+import QAImageSelect from './components/QAImageSelect'
 import QATime from './components/QATime'
 import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors } from './utils/blitzar'
 import makeSchemaFormTr from './utils/i18n'
@@ -12,6 +13,7 @@ function install (app) {
   app.component(QAAutocomplete.name, QAAutocomplete)
   app.component(QADate.name, QADate)
   app.component(QADatetime.name, QADatetime)
+  app.component(QAImageSelect.name, QAImageSelect)
   app.component(QATime.name, QATime)
   app.component(QInput.name, QInput)
   app.component(QSlider.name, QSlider)

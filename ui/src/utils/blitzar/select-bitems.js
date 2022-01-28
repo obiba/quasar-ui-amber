@@ -56,4 +56,35 @@ class AutocompleteBItem extends BItem {
   }
 }
 
-export { SelectBItem, AutocompleteBItem }
+class ImageSelectBItem extends BItem {
+  
+  isFor(type) {
+    return type === 'image-select'
+  }
+
+  makeBItem(item, prefix) {
+    return {
+      id: prefix + item.name,
+      component: 'QAImageSelect',
+      label: this.tr(item.label),
+      subLabel: this.tr(item.description),
+      hint: this.tr(item.hint),
+      defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
+      options: item.options ? item.options.map(opt => {
+        return {
+          value: opt.value,
+          label: this.tr(opt.label)
+        }
+      }) : [],
+      multiple: item.multiple,
+      labelClasses: item.labelClass,
+      imageSrc: item.imageSrc,
+      imageWidth: item.imageWidth,
+      imageHeight: item.imageHeight,
+      areas: item.areas,
+      showSelect: item.showSelect
+    }
+  }
+}
+
+export { SelectBItem, AutocompleteBItem, ImageSelectBItem }
