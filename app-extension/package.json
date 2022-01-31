@@ -1,6 +1,6 @@
 {
   "name": "@obiba/quasar-app-extension-amber",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A Quasar App Extension for reusing Quasar custom components in Amber forms",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
   "license": "MIT",
@@ -15,7 +15,7 @@
   "bugs": "https://github.com/obiba/quasar-ui-amber/issues",
   "homepage": "https://github.com/obiba/quasar-ui-amber",
   "dependencies": {
-    "@obiba/quasar-ui-amber": "^0.8.0"
+    "@obiba/quasar-ui-amber": "^0.8.1"
   },
   "engines": {
     "node": ">= 8.9.0",
