@@ -1,19 +1,14 @@
 import { h, ref, computed } from 'vue'
-import { QSelect } from 'quasar'
+import { QSelect, QIcon } from 'quasar'
 
 export default {
   name: 'QAImageSelect',
   props: {
     modelValue: [String, Array],
-    options: {
-      type: Array,
-      required:true
-    },
+    options: Array,
     multiple: Boolean,
-    imageSrc: {
-      type: String,
-      required: true
-    },
+    imageSrc: String,
+    imageClass: String,
     areas: Array,
     readonly: Boolean,
     disable: Boolean,
@@ -51,11 +46,6 @@ export default {
       }
     }
 
-    const image = h('img', {
-      style: 'max-width: 100%; max-height: 100%;',
-      src: props.imageSrc
-    })
-
     const getOpacity = (value) => {
       if (props.multiple) {
         return props.modelValue && props.modelValue.includes(value) ? '0.6' : '0.2'
@@ -68,35 +58,56 @@ export default {
       return props.options.filter(opt => opt.value === value).map(opt => opt.label).pop()
     }
 
+    const svgViewBox = ref('0 0 0 0')
+    if (props.imageSrc) {
+      const img = new Image();
+      img.onload = () => {
+        svgViewBox.value = `0 0 ${img.width} ${img.height}`
+      }
+      img.src = props.imageSrc
+    }
+
     return () => {
 
-      const areaLinks = props.areas ? props.areas.map(area => {
-        return h('a', {
-          href: 'javascript:void(0)'
-        }, [
-          h('polygon', {
-            fill: area.fill,
-            opacity: getOpacity(area.value),
-            points: area.points,
-            onClick () { set(area.value) }
+      const wrapperChildren = []
+      if (props.imageSrc) {
+        const image = h('img', {
+          style: 'max-width: 100%; max-height: 100%;',
+          src: props.imageSrc
+        })
+        wrapperChildren.push(image)
+
+        const areaLinks = props.areas ? props.areas.map(area => {
+          return h('a', {
+            href: 'javascript:void(0)'
           }, [
-            h('title', {}, [ getTitle(area.value) ])
+            h('polygon', {
+              fill: area.fill,
+              opacity: getOpacity(area.value),
+              points: area.points,
+              onClick () { set(area.value) }
+            }, [
+              h('title', {}, [ getTitle(area.value) ])
+            ])
           ])
-        ])
-      }) : []
+        }) : []
+    
+        const svgAttrs = {
+          style: 'position: absolute;top: 0;right: 0;bottom: 0;left: 0;height: 100%;width: 100%;',
+          viewBox: svgViewBox.value
+        }
   
-      const svg = h('svg', {
-        version: '1.1',
-        xmlns: 'http://www.w3.org/2000/svg',
-        'xmlns:xlink': 'http://www.w3.org/1999/xlink',
-        preserveAspectRatio: 'xMinYMin meet',
-        style: 'position: absolute;top: 0;right: 0;bottom: 0;left: 0;height: 100%;width: 100%;'
-      }, areaLinks)
+        const svg = h('svg', svgAttrs, areaLinks)
+
+        wrapperChildren.push(svg)
+      } else {
+        wrapperChildren.push(h(QIcon, { name: 'image', size: 'xl', class: 'text-grey' }))
+      }
 
       const wrapper = h('div', {
         class: 'q-mt-md',
         style: 'max-width: 100%; display: inline-block; position: relative'
-      }, [ image, svg ])
+      }, wrapperChildren)
 
       const children = [ wrapper ]
 
@@ -119,7 +130,7 @@ export default {
       }
 
       return h('div', {
-        class: 'qa-image-select',
+        class: 'qa-image-select ' + (props.imageClass ? props.imageClass : ''),
       }, children)
     }
   }

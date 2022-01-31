@@ -5,7 +5,7 @@ import QAImageSelect from './components/QAImageSelect'
 import QATime from './components/QATime'
 import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors } from './utils/blitzar'
 import makeSchemaFormTr from './utils/i18n'
-import { QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 'quasar'
+import { QIcon, QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 'quasar'
 
 const version = __UI_VERSION__
 
@@ -15,6 +15,7 @@ function install (app) {
   app.component(QADatetime.name, QADatetime)
   app.component(QAImageSelect.name, QAImageSelect)
   app.component(QATime.name, QATime)
+  app.component(QIcon.name, QIcon)
   app.component(QInput.name, QInput)
   app.component(QSlider.name, QSlider)
   app.component(QRating.name, QRating)

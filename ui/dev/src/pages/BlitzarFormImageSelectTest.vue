@@ -19,6 +19,33 @@ import { makeBlitzarQuasarSchemaForm } from 'ui'
 const schema = {
   items: [
     {
+      name: 'IMAGE_BROKEN',
+      type: 'image-select',
+      label: 'Image broken label',
+      description: 'Image map, without image',
+      hint: 'Image map hint',
+      options: [
+        {
+          value: '1',
+          label: 'Face Left'
+        },
+        {
+          value: '2',
+          label: 'Face Right'
+        },
+        {
+          value: '3',
+          label: 'Back Left'
+        },
+        {
+          value: '4',
+          label: 'Back Right'
+        }
+      ],
+      multiple: false,
+      imageClass: 'text-center'
+    },
+    {
       name: 'IMAGE',
       type: 'image-select',
       label: 'Image map label',
@@ -44,6 +71,7 @@ const schema = {
       ],
       multiple: false,
       imageSrc: 'https://www.researchgate.net/profile/Robert-Hristovski/publication/282346406/figure/fig2/AS:341573754736648@1458448937402/Body-map-Head-area-1-2-23-or-24-neck-area-3-or-25-shoulders-area-4-5-26_W640.jpg',
+      imageClass: 'text-center',
       areas: [
         {
           value: '1',
@@ -184,8 +212,6 @@ const schema = {
       ],
       multiple: false,
       imageSrc: 'https://www.researchgate.net/profile/Robert-Hristovski/publication/282346406/figure/fig2/AS:341573754736648@1458448937402/Body-map-Head-area-1-2-23-or-24-neck-area-3-or-25-shoulders-area-4-5-26_W640.jpg',
-      imageWidth: '640',
-      imageHeight: '467',
       areas: [
         {
           value: '1',

@@ -79,6 +79,7 @@ class ImageSelectBItem extends BItem {
       multiple: item.multiple,
       labelClasses: item.labelClass,
       imageSrc: item.imageSrc,
+      imageClass: item.imageClass, 
       areas: item.areas,
       showSelect: item.showSelect
     }
