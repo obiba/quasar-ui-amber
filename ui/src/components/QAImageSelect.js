@@ -14,10 +14,7 @@ export default {
       type: String,
       required: true
     },
-    areas: {
-      type: Array,
-      required:true
-    },
+    areas: Array,
     readonly: Boolean,
     disable: Boolean,
     hint: String,
@@ -73,7 +70,7 @@ export default {
 
     return () => {
 
-      const areaLinks = props.areas.map(area => {
+      const areaLinks = props.areas ? props.areas.map(area => {
         return h('a', {
           href: 'javascript:void(0)'
         }, [
@@ -86,7 +83,7 @@ export default {
             h('title', {}, [ getTitle(area.value) ])
           ])
         ])
-      })
+      }) : []
   
       const svg = h('svg', {
         version: '1.1',
