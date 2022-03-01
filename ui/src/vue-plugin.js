@@ -8,7 +8,7 @@ import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors } from '
 import makeSchemaFormTr from './utils/i18n'
 import { QIcon, QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 'quasar'
 import OpenLayersMap from 'vue3-openlayers'
-import 'vue3-openlayers/dist/vue3-openlayers.css'
+//import 'vue3-openlayers/dist/vue3-openlayers.css'
 
 const version = __UI_VERSION__
 

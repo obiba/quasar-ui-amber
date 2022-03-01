@@ -7,6 +7,7 @@ const buble = require('@rollup/plugin-buble')
 const json = require('@rollup/plugin-json')
 const { nodeResolve } = require('@rollup/plugin-node-resolve')
 const replace = require('@rollup/plugin-replace')
+const hypothetical = require('rollup-plugin-hypothetical')
 
 const { version } = require('../package.json')
 
@@ -14,6 +15,15 @@ const buildConf = require('./config')
 const buildUtils = require('./utils')
 
 const rollupPlugins = [
+  hypothetical({
+    allowFallthrough: true,
+    files: {
+      // Error: 'default' is not exported by node_modules/pbf/index.js, imported by node_modules/ol/format/MVT.js
+      'pbf/': `
+        export default {};
+      `
+    }
+  }),
   replace({
     preventAssignment: false,
     values: {
@@ -26,6 +36,9 @@ const rollupPlugins = [
   }),
   json(),
   buble({
+    transforms: {
+      dangerousForOf: true
+    },
     objectAssign: 'Object.assign'
   })
 ]
