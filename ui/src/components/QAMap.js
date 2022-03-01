@@ -2,8 +2,6 @@ import { h, ref, computed } from 'vue'
 import { GeoJSON } from 'ol/format'
 import { Map, MapControls, Layers, Sources, Interactions, Styles } from "vue3-openlayers";
 import { QBtn } from 'quasar';
-//import { Map } from 'vue3-openlayers'
-//import 'vue3-openlayers/dist/vue3-openlayers.css'
 
 export default {
     name: 'QAMap',
@@ -15,6 +13,11 @@ export default {
             type: String,
             default: 'Point'
         },
+        mapHeight: {
+            type: String,
+            default: '400px'
+        },
+        mapWidth: String,
         readonly: Boolean,
         disable: Boolean,
         hint: String,
@@ -107,16 +110,14 @@ export default {
             ])
 
             const mapComponents = h(Map.Map, {
-                class: 'q-mt-md',
+                class: 'q-mt-sm',
                 loadTilesWhileAnimating: true,
                 loadTilesWhileInteracting: true,
-                style: 'height:400px'
+                style: 'height: ' + props.mapHeight
             }, {
                 default: () => [
                     h(Map.View, {
                         ref: view,
-                        rotation: 0,
-                        zoom: 8,
                         projection: projection.value
                     }),
                     h(MapControls.FullScreenControl),
@@ -172,6 +173,7 @@ export default {
 
             return h('div', {
                 class: 'qa-map',
+                style: (props.mapWidth ? 'width: ' + props.mapWidth : '')
             }, children)
         }
     }

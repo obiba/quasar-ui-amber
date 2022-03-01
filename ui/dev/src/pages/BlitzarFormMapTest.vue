@@ -25,7 +25,9 @@ const schema = {
       description: 'Geo map, with point',
       hint: 'Geo map hint',
       multiple: false,
-      geometryType: 'Point'
+      geometryType: 'Point',
+      mapHeight: '600px',
+      mapWidth: '600px'
     },
     {
       name: 'MAP_POLYGON',

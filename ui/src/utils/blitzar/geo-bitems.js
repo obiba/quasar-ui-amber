@@ -15,7 +15,9 @@ class MapBItem extends BItem {
             defaultValue: item.default,
             labelClasses: item.labelClass,
             multiple: item.multiple,
-            geometryType: item.geometryType
+            geometryType: item.geometryType,
+            mapHeight: item.mapHeight,
+            mapWidth: item.mapWidth
         }
     }
 }
