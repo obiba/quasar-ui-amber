@@ -8,6 +8,7 @@ const json = require('@rollup/plugin-json')
 const { nodeResolve } = require('@rollup/plugin-node-resolve')
 const replace = require('@rollup/plugin-replace')
 const hypothetical = require('rollup-plugin-hypothetical')
+const commonjs = require('@rollup/plugin-commonjs')
 
 const { version } = require('../package.json')
 
@@ -35,6 +36,7 @@ const rollupPlugins = [
     preferBuiltins: false
   }),
   json(),
+  commonjs(),
   buble({
     transforms: {
       dangerousForOf: true
