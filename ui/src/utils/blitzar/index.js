@@ -1,12 +1,13 @@
 import makeSchemaFormTr from '../i18n'
 import BItem from './bitem'
-import { TextBItem, TextAreaBItem } from './text-bitems'
-import { NumberBItem, SliderBItem, RatingBItem } from './number-items'
+import { DateBItem, DatetimeBItem, TimeBItem } from './datetime-bitems'
+import { MapBItem } from './geo-bitems'
+import { ToggleBItem } from './logical-bitems'
+import { SectionBItem, ComputedBItem } from './misc-bitems'
+import { NumberBItem, SliderBItem, RatingBItem } from './number-bitems'
 import { RadioGroupBItem, CheckboxGroupBItem } from './options-bitems'
 import { SelectBItem, AutocompleteBItem, ImageSelectBItem } from './select-bitems'
-import { ToggleBItem } from './logical-bitems'
-import { DateBItem, DatetimeBItem, TimeBItem } from './datetime-bitems'
-import { SectionBItem, ComputedBItem } from './misc-bitems'
+import { TextBItem, TextAreaBItem } from './text-bitems'
 
 function makeBlitzarQuasarSchemaForm(schema, options) {
   const tr = makeSchemaFormTr(schema, options)
@@ -19,7 +20,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
     new SelectBItem(tr), new AutocompleteBItem(tr), new ImageSelectBItem(tr),
     new ToggleBItem(tr),
     new DateBItem(tr), new DatetimeBItem(tr), new TimeBItem(tr),
-    new SectionBItem(tr), new ComputedBItem(tr)
+    new SectionBItem(tr), new ComputedBItem(tr),
+    new MapBItem(tr)
   ]
 
   const makeBItem = (item, prefix, parentLogicalCondition, showCondition) => {

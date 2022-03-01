@@ -48,7 +48,8 @@ module.exports = function (ctx) {
 
       chainWebpack (chain) {
         chain.resolve.alias.merge({
-          ui: path.resolve(__dirname, `../src/index.esm.js`)
+          ui: path.resolve(__dirname, `../src/index.esm.js`),
+          vue: path.resolve(__dirname, '../node_modules/vue')
         })
 
         chain.plugin('define-ui')
