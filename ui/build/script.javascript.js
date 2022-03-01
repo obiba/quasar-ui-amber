@@ -36,7 +36,10 @@ const rollupPlugins = [
     preferBuiltins: false
   }),
   json(),
-  commonjs(),
+  commonjs({
+    // Error: 'Map' is not exported by node_modules/vue3-openlayers/dist/vue3-openlayers.common.js
+    include: 'node_modules/vue3-openlayers/dist/vue3-openlayers.common.js'
+  }),
   buble({
     transforms: {
       dangerousForOf: true
