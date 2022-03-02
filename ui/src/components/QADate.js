@@ -4,12 +4,33 @@ import { QInput, QIcon, QPopupProxy, QDate, QBtn, ClosePopup } from 'quasar'
 export default {
   name: 'QADate',
   props: {
-    modelValue: String
+    modelValue: String,
+    closeLabel: String
   },
   emits: ['update:modelValue'],
 
   setup(props, { emit }) {
     // console.log(props)
+
+    const controls = () => {
+      const ctrls = []
+      if (props.closeLabel) {
+        ctrls.push(h('div', {
+          class: 'row items-center justify-end q-gutter-sm'
+        }, {
+          default: () => [
+            withDirectives(h(QBtn, {
+              label: props.closeLabel,
+              color: 'primary',
+              flat: true
+            }), [
+              [ ClosePopup, true ]
+            ])
+          ]
+        }))
+      }
+      return ctrls
+    }
 
     return () => {
       return h(QInput, {
@@ -37,21 +58,7 @@ export default {
                     mask: 'YYYY-MM-DD',
                     minimal: true
                   }, {
-                    default: () => [
-                      h('div', {
-                        class: 'row items-center justify-end q-gutter-sm'
-                      }, {
-                        default: () => [
-                          withDirectives(h(QBtn, {
-                            label: 'OK',
-                            color: 'primary',
-                            flat: true
-                          }), [
-                            [ ClosePopup, true ]
-                          ])
-                        ]
-                      })
-                    ]
+                    default: controls
                   })
                 ]
               })

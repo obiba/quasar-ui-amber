@@ -4,6 +4,7 @@
       label="Some time"
       placeholder="HH:mm"
       hint="Select a time in 24h format."
+      closeLabel="Close"
       v-model="model"
     />
     <div class="bg-black text-white q-mt-lg q-pa-md">

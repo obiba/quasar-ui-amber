@@ -16,7 +16,8 @@ class DateBItem extends BItem {
             hint: this.tr(item.hint),
             parseInput: (val) => val !== null && val.length === 0 ? null : val,
             defaultValue: item.default,
-            labelClasses: item.labelClass
+            labelClasses: item.labelClass,
+            closeLabel: item.closeLabel ? this.tr(item.closeLabel) : undefined
         }
     }
 }
@@ -37,7 +38,8 @@ class DatetimeBItem extends BItem {
             hint: this.tr(item.hint),
             parseInput: (val) => val !== null && val.length === 0 ? null : val,
             defaultValue: item.default,
-            labelClasses: item.labelClass
+            labelClasses: item.labelClass,
+            closeLabel: item.closeLabel ? this.tr(item.closeLabel) : undefined
         }
     }
 }
@@ -59,7 +61,8 @@ class TimeBItem extends BItem {
             hint: this.tr(item.hint),
             parseInput: (val) => val !== null && val.length === 0 ? null : val,
             defaultValue: item.default,
-            labelClasses: item.labelClass
+            labelClasses: item.labelClass,
+            closeLabel: item.closeLabel ? this.tr(item.closeLabel) : undefined
         }
     }
 }

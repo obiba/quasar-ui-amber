@@ -4,6 +4,7 @@
       label="Some Date and Time"
       placeholder="YYYY-MM-DD HH:mm"
       hint="Select a date in ISO-8601 format and time in 24h format."
+      closeLabel="Close"
       v-model="model"
     />
     <div class="bg-black text-white q-mt-lg q-pa-md">
@@ -23,9 +24,3 @@ export default {
   }
 }
 </script>
-
-<style lang="sass" scoped>
-.directive-target
-  width: 50px
-  height: 50px
-</style>

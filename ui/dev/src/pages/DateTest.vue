@@ -4,6 +4,7 @@
       label="Some Date"
       placeholder="YYYY-MM-DD"
       hint="Select a date in ISO-8601 format."
+      closeLabel="Close"
       v-model="model"
     />
     <div class="bg-black text-white q-mt-lg q-pa-md">
@@ -23,9 +24,3 @@ export default {
   }
 }
 </script>
-
-<style lang="sass" scoped>
-.directive-target
-  width: 50px
-  height: 50px
-</style>
