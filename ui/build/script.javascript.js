@@ -7,6 +7,8 @@ const buble = require('@rollup/plugin-buble')
 const json = require('@rollup/plugin-json')
 const { nodeResolve } = require('@rollup/plugin-node-resolve')
 const replace = require('@rollup/plugin-replace')
+const hypothetical = require('rollup-plugin-hypothetical')
+const commonjs = require('@rollup/plugin-commonjs')
 
 const { version } = require('../package.json')
 
@@ -14,6 +16,18 @@ const buildConf = require('./config')
 const buildUtils = require('./utils')
 
 const rollupPlugins = [
+  /* hypothetical({
+    allowFallthrough: true,
+    files: {
+      // Error: 'default' is not exported by node_modules/pbf/index.js, imported by node_modules/ol/format/MVT.js
+      'pbf': `
+        export default {};
+      `,
+      'vue3-openlayers': `
+        export default {};
+      `
+    }
+  }), */
   replace({
     preventAssignment: false,
     values: {
@@ -25,9 +39,21 @@ const rollupPlugins = [
     preferBuiltins: false
   }),
   json(),
-  buble({
+  /* commonjs({
+    // Error: 'Map' is not exported by node_modules/vue3-openlayers/dist/vue3-openlayers.common.js
+    include: 'node_modules/vue3-openlayers/dist/vue3-openlayers.common.js'
+  })*/, 
+  // commonjs({
+  //   include: [
+  //     /node_modules/
+  //   ]
+  // }),
+  /* buble({
+    transforms: {
+      dangerousForOf: true
+    },
     objectAssign: 'Object.assign'
-  })
+  }) */
 ]
 
 const builds = [
@@ -135,12 +161,12 @@ function build (builds) {
 function genConfig (opts) {
   Object.assign(opts.rollup.input, {
     plugins: rollupPlugins,
-    external: [ 'vue', 'quasar' ]
+    external: [ 'vue', 'quasar', 'vue3-openlayers', 'ol', 'ol-contextmenu', 'ol-ext', 'ol-mapbox-style', 'pbf' ]
   })
 
   Object.assign(opts.rollup.output, {
     banner: buildConf.banner,
-    globals: { vue: 'Vue', quasar: 'Quasar' }
+    globals: { vue: 'Vue', quasar: 'Quasar', 'vue3-openlayers': 'OpenLayersMap' }
   })
 
   return opts
