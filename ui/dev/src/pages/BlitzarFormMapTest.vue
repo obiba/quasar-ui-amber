@@ -22,7 +22,7 @@ const schema = {
       name: 'MAP_POINT',
       type: 'map',
       label: 'Point label',
-      description: 'Geo map, with point',
+      description: 'Geo map, with point, no center + geolocation',
       hint: 'Geo map hint',
       multiple: false,
       geometryType: 'Point',
@@ -33,28 +33,33 @@ const schema = {
       name: 'MAP_POLYGON',
       type: 'map',
       label: 'Polygon label',
-      description: 'Geo map, with polygon',
+      description: 'Geo map, with polygon, center + no geolocation',
       hint: 'Geo map hint',
       multiple: false,
-      geometryType: 'Polygon'
+      geometryType: 'Polygon',
+      center: '[-73.55,45.55]',
+      zoom: 8,
+      geoLocation: false
     },
     {
       name: 'MAP_POINTS',
       type: 'map',
       label: 'Points label',
-      description: 'Geo map, with points',
+      description: 'Geo map, with points, center + geolocation',
       hint: 'Geo map hint',
       multiple: true,
-      geometryType: 'Point'
+      geometryType: 'Point',
+      center: [40,40]
     },
     {
       name: 'MAP_POLYGONS',
       type: 'map',
       label: 'Polygons label',
-      description: 'Geo map, with polygons',
+      description: 'Geo map, with polygons, no center + no geolocation',
       hint: 'Geo map hint',
       multiple: true,
-      geometryType: 'Polygon'
+      geometryType: 'Polygon',
+      geoLocation: false
     }
   ],
   i18n: {}

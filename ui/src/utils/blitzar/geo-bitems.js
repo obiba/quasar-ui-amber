@@ -17,7 +17,10 @@ class MapBItem extends BItem {
             multiple: item.multiple,
             geometryType: item.geometryType,
             mapHeight: item.mapHeight,
-            mapWidth: item.mapWidth
+            mapWidth: item.mapWidth,
+            center: item.center,
+            zoom: item.zoom,
+            geoLocation: item.geoLocation !== undefined ? item.geoLocation : true
         }
     }
 }

@@ -1,4 +1,4 @@
-import { h, ref, computed } from 'vue'
+import { h, ref, computed, isProxy, toRaw } from 'vue'
 import { GeoJSON } from 'ol/format'
 import { Map, MapControls, Layers, Sources, Interactions, Styles } from "vue3-openlayers";
 import { QBtn } from 'quasar';
@@ -18,6 +18,15 @@ export default {
             default: '400px'
         },
         mapWidth: String,
+        center: [String, Array],
+        zoom: {
+            type: Number,
+            default: 12
+        },
+        geoLocation: {
+            type: Boolean,
+            default: true
+        },
         readonly: Boolean,
         disable: Boolean,
         hint: String,
@@ -92,84 +101,118 @@ export default {
 
         return () => {
 
-            const controlsComponents = h('div', {
-                class: 'bg-grey-3 q-mb-sm',
-            }, [
+
+            const controlsComponents = [
                 h(QBtn, {
                     icon: 'delete_outline',
                     flat: true,
                     size: 'sm',
                     onClick: clearZones
+                })
+            ]
+
+            const viewProps = {
+                ref: view,
+                projection: projection.value,
+                zoom: props.zoom
+            }
+
+            if (location.value === null && props.center) {
+                if (typeof props.center === 'string') {
+                    const loc = JSON.parse(props.center)
+                    if (Array.isArray(loc) && loc.length === 2) {
+                        location.value = loc
+                    }
+                } else if (props.center.length === 2) {
+                    location.value = props.center
+                }
+            }
+            if (isProxy(location.value)) {
+                viewProps.center = toRaw(location.value)
+            } else {
+                viewProps.center = location.value
+            }
+            if (viewProps.center === null) {
+                delete viewProps.center
+                delete viewProps.zoom
+            }
+
+            const mapComponents = [
+                h(Map.View, viewProps),
+                h(MapControls.FullScreenControl),
+                //h(MapControls.MousePositionControl),
+                h(MapControls.ZoomControl),
+                h(MapControls.AttributionControl),
+                h(Layers.TileLayer, null, {
+                    default: () => [h(Sources.SourceOSM)]
                 }),
-                h(QBtn, {
+                h(Layers.VectorLayer, null, {
+                    default: () => [
+                        h(Sources.SourceVector, {
+                            projection: projection.value,
+                            features: zones.value
+                        }, {
+                            default: () => [
+                                h(Interactions.DrawInteraction, {
+                                    type: props.geometryType,
+                                    onDrawend: drawend
+                                })
+                            ]
+                        }),
+                        h(Styles.Style, null, {
+                            default: () => [
+                                h(Styles.Stroke, {
+                                    color: 'red',
+                                    width: 2
+                                }),
+                                h(Styles.Fill, {
+                                    color: 'rgba(255,255,255,0.1)'
+                                }),
+                                h(Styles.Circle, {
+                                    radius: 7
+                                }, {
+                                    default: () => [
+                                        h(Styles.Fill, {
+                                            color: 'blue'
+                                        })
+                                    ]
+                                })
+                            ]
+                        })
+                    ]
+                })
+            ]
+
+            if (props.geoLocation) {
+                mapComponents.push(h(Map.GeoLocation, {
+                    projection: projection.value,
+                    onPositionChanged: geoLocationChanged
+                }))
+            }
+
+            if (props.geoLocation || props.center) {
+                controlsComponents.push(h(QBtn, {
                     icon: 'adjust',
                     flat: true,
                     size: 'sm',
                     onClick: toCurrentPosition
-                })
-            ])
+                }))
+            }
 
-            const mapComponents = h(Map.Map, {
-                class: 'q-mt-sm',
-                loadTilesWhileAnimating: true,
-                loadTilesWhileInteracting: true,
-                style: 'height: ' + props.mapHeight
-            }, {
-                default: () => [
-                    h(Map.View, {
-                        ref: view,
-                        projection: projection.value
-                    }),
-                    h(MapControls.FullScreenControl),
-                    //h(MapControls.MousePositionControl),
-                    h(MapControls.ZoomControl),
-                    h(MapControls.AttributionControl),
-                    h(Layers.TileLayer, null, {
-                        default: () => [h(Sources.SourceOSM)]
-                    }),
-                    h(Layers.VectorLayer, null, {
-                        default: () => [
-                            h(Sources.SourceVector, {
-                                projection: projection.value,
-                                features: zones.value
-                            }, {
-                                default: () => [
-                                    h(Interactions.DrawInteraction, {
-                                        type: props.geometryType,
-                                        onDrawend: drawend
-                                    })
-                                ]
-                            }),
-                            h(Styles.Style, null, {
-                                default: () => [
-                                    h(Styles.Stroke, {
-                                        color: 'red',
-                                        width: 2
-                                    }),
-                                    h(Styles.Fill, {
-                                        color: 'rgba(255,255,255,0.1)'
-                                    }),
-                                    h(Styles.Circle, {
-                                        radius: 7
-                                    }, {
-                                        default: () => [
-                                            h(Styles.Fill, {
-                                                color: 'blue'
-                                            })
-                                        ]
-                                    })
-                                ]
-                            })
-                        ]
-                    }),
-                    h(Map.GeoLocation, {
-                        projection: projection.value,
-                        onPositionChanged: geoLocationChanged
-                    })
-                ]
-            })
-
-            const children = [mapComponents, controlsComponents]
+            const children = [
+                h(Map.Map, {
+                    class: 'q-mt-sm',
+                    loadTilesWhileAnimating: true,
+                    loadTilesWhileInteracting: true,
+                    style: 'height: ' + props.mapHeight
+                }, {
+                    default: () => mapComponents
+                }),
+                h('div', {
+                    class: 'bg-grey-3 q-mb-sm',
+                },
+                    controlsComponents)
+            ]
 
             return h('div', {
                 class: 'qa-map',
