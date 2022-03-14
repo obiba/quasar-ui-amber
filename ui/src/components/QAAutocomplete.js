@@ -20,7 +20,8 @@ export default {
   props: {
     modelValue: [String, Array],
     options: Array,
-    multiple: Boolean
+    multiple: Boolean,
+    newValue: Boolean
   },
   emits: ['update:modelValue', 'new-value'],
   
@@ -48,7 +49,8 @@ export default {
     }
 
     return () => {
-      return h(QSelect, {
+
+      const opts = {
         modelValue: props.modelValue,
         'onUpdate:modelValue': value => emit('update:modelValue', value),
         'use-input': true,
@@ -61,9 +63,15 @@ export default {
         multiple: props.multiple,
         options: filterOptions.value,
         onFilter: filterFn,
-        onNewValue: createValueFn,
         class: 'qa-autocomplete'
-      })
+      }
+      if (props.newValue) {
+        opts.onNewValue = createValueFn
+      }
+
+      console.log(opts)
+
+      return h(QSelect, opts)
     }
   }
 }

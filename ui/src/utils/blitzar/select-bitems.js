@@ -51,6 +51,7 @@ class AutocompleteBItem extends BItem {
         }
       }) : [],
       multiple: item.multiple,
+      newValue: item.newValue,
       labelClasses: item.labelClass
     }
   }
