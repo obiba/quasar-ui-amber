@@ -7,12 +7,13 @@ class MapBItem extends BItem {
     }
 
     makeBItem(item, prefix) {
+        console.log(item)
         return {
             id: prefix + item.name,
             component: 'QAMap',
             label: this.tr(item.label),
             subLabel: this.tr(item.description),
-            defaultValue: item.default,
+            defaultValue: typeof item.defaultValue === 'string' ? JSON.parse(item.defaultValue) : item.defaultValue,
             labelClasses: item.labelClass,
             multiple: item.multiple,
             geometryType: item.geometryType,
