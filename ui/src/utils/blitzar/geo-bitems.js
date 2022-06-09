@@ -7,7 +7,7 @@ class MapBItem extends BItem {
     }
 
     makeBItem(item, prefix) {
-        console.log(item)
+        // console.log(item)
         return {
             id: prefix + item.name,
             component: 'QAMap',

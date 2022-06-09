@@ -69,7 +69,7 @@ export default {
         opts.onNewValue = createValueFn
       }
 
-      console.log(opts)
+      // console.log(opts)
 
       return h(QSelect, opts)
     }
