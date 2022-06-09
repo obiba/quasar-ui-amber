@@ -101,7 +101,7 @@ export default {
 
         return () => {
 
-            console.log(props.modelValue)
+            // console.log(props.modelValue)
 
             const controlsComponents = [
                 h(QBtn, {
