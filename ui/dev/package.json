@@ -28,8 +28,8 @@
     "yarn": ">= 1.6.0"
   },
   "dependencies": {
-    "@blitzar/form": "https://gitpkg.now.sh/epigeny/blitzar/packages/form?v1.0.10-obiba",
-    "@blitzar/types": "https://gitpkg.now.sh/epigeny/blitzar/packages/types?v1.0.10-obiba",
-    "@blitzar/utils": "https://gitpkg.now.sh/epigeny/blitzar/packages/utils?v1.0.10-obiba"
+    "@blitzar/form": "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.10-obiba",
+    "@blitzar/types": "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.10-obiba",
+    "@blitzar/utils": "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.10-obiba"
   }
 }

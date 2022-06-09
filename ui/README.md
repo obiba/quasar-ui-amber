@@ -10,6 +10,9 @@
 * `QADate` input with date picker, using ISO-8601 format
 * `QADatetime` input with date and time pickers, using ISO-8601 and 24h formats
 * `QATime` input with time picker, using 24h format
+* `QAAutocomplete` input is a text field with autocomplete
+* `QAImageSelect` input is a select component combined with an image map
+* `QAMap` input is a geographic map on which points, linestrings and polygons can be selected, using GeoJSON format
 
 # Usage
 
