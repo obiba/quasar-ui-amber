@@ -43,7 +43,8 @@
     "rollup": "^2.45.0",
     "rollup-plugin-hypothetical": "^2.1.1",
     "uglify-js": "^3.13.3",
-    "zlib": "^1.0.5"
+    "zlib": "^1.0.5",
+    "snarkdown": "^2.0.0"
   },
   "browserslist": [
     "last 4 Chrome versions",
