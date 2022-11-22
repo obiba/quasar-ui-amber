@@ -230,9 +230,17 @@ const schema = {
       name: 'SECTION',
       type: 'section',
       label: 'Section label',
-      description: 'Section description',
-      labelClass: 'text-h4',
-      descriptionClass: 'text-caption text-grey-8'
+      description: 'Section description with [markdown](http://daringfireball.net/projects/markdown/) support.'
+    },
+    {
+      name: 'SECTION2',
+      type: 'section',
+      description: 'Section without label.'
+    },
+    {
+      name: 'SECTION3',
+      type: 'section',
+      label: 'Section without body'
     },
     {
       name: 'SLIDER',

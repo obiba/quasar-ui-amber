@@ -3,6 +3,7 @@ import QADate from './components/QADate'
 import QADatetime from './components/QADatetime'
 import QAImageSelect from './components/QAImageSelect'
 import QAMap from './components/QAMap'
+import QASection from './components/QASection'
 import QATime from './components/QATime'
 import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors } from './utils/blitzar'
 import makeSchemaFormTr from './utils/i18n'
@@ -18,6 +19,7 @@ function install (app) {
   app.component(QADatetime.name, QADatetime)
   app.component(QAImageSelect.name, QAImageSelect)
   app.component(QAMap.name, QAMap)
+  app.component(QASection.name, QASection)
   app.component(QATime.name, QATime)
   app.component(QIcon.name, QIcon)
   app.component(QInput.name, QInput)
@@ -35,6 +37,7 @@ export {
   QADatetime,
   QAImageSelect,
   QAMap,
+  QASection,
   QATime,
 
   makeBlitzarQuasarSchemaForm,

@@ -1,6 +1,5 @@
 import BItem from './bitem'
 
-
 class SectionBItem extends BItem {
 
     isFor(type) {
@@ -10,20 +9,11 @@ class SectionBItem extends BItem {
     makeBItem(item, prefix) {
       return {
         id: prefix + item.name,
-        component: 'div',
-        slot: [
-          {
-            component: 'div',
-            id: (prefix + item.name).replaceAll('.', '_').toLowerCase(),
-            slot: this.tr(item.label),
-            class: item.labelClass ? item.labelClass : 'text-h4'
-          },
-          {
-            component: 'div',
-            slot: this.tr(item.description),
-            class: item.descriptionClass ? item.descriptionClass : 'text-subtitle1 text-grey-8'
-          }
-        ]
+        component: 'QASection',
+        head: this.tr(item.label),
+        headClass: item.labelClass,
+        body: this.tr(item.description),
+        bodyClass: item.descriptionClass
       }
     }
 }
