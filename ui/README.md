@@ -13,6 +13,7 @@
 * `QAAutocomplete` input is a text field with autocomplete
 * `QAImageSelect` input is a select component combined with an image map
 * `QAMap` input is a geographic map on which points, linestrings and polygons can be selected, using GeoJSON format
+* `QASection` is a section component (a header and a body), with Markdown support
 
 # Usage
 
