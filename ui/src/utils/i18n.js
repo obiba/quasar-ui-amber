@@ -12,9 +12,9 @@ function makeSchemaFormTr(schema, options) {
     return (key) => {
       let rval = key
       if (locale) {
-        if (schema.i18n[locale][key]) {
+        if (schema.i18n[locale][key] !== undefined) {
           rval = schema.i18n[locale][key]
-        } else if (schema.i18n['en'][key]) {
+        } else if (schema.i18n['en'][key] !== undefined) {
           rval = schema.i18n['en'][key]
         }
       }
