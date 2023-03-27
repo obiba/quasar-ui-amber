@@ -4,6 +4,7 @@ import snarkdown from 'snarkdown'
 export default {
   name: 'QASection',
   props: {
+    identifier: String,
     head: String,
     headClass: String,
     body: String,
@@ -28,6 +29,7 @@ export default {
       }
 
       return h('div', {
+        id: props.identifier,
         class: 'qa-section'
       }, children)
     }
