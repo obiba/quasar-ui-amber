@@ -30,6 +30,36 @@ class ComputedBItem extends BItem {
     const bcompute = BItem.variableRefRewrite(item.compute)
     const script = `{
       try {
+        function map(oldValue, mapping, undefValue) {
+          if (oldValue === undefined) {
+            return undefValue
+          }
+          if (Array.isArray(oldValue)) {
+            return oldValue.map(val => map(val, mapping, undefValue))
+          }
+          if (Array.isArray(mapping)) {
+            for (let i = 0; i < mapping.length - 1; i++) {
+              let stop = mapping[i]
+              let val = mapping[i+1]
+              if (i === mapping.length - 2) {
+                if (oldValue >= stop) return val
+              } else if (oldValue < stop) {
+                return val
+              }
+              i++
+            }
+          } else if (mapping instanceof Object) {
+            for (const key in mapping) {
+              if (key === oldValue.toString()) {
+                return mapping[key]
+              }
+            }
+            if (Object.hasOwn(mapping, '*')) {
+              return mapping['*']
+            }
+          }
+          return oldValue
+        }
         const rval = (${bcompute})
         if (val !== rval) { updateField({ id: '${id}', value: rval }) }
         return rval
