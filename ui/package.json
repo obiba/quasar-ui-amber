@@ -1,6 +1,6 @@
 {
   "name": "@obiba/quasar-ui-amber",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
   "description": "Quasar components for Amber Forms",
   "license": "MIT",
@@ -42,9 +42,9 @@
     "rimraf": "^3.0.0",
     "rollup": "^2.45.0",
     "rollup-plugin-hypothetical": "^2.1.1",
+    "snarkdown": "^2.0.0",
     "uglify-js": "^3.13.3",
-    "zlib": "^1.0.5",
-    "snarkdown": "^2.0.0"
+    "zlib": "^1.0.5"
   },
   "browserslist": [
     "last 4 Chrome versions",
