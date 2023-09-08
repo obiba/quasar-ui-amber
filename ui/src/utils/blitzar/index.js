@@ -57,6 +57,7 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         item.items.forEach(child => {
             bitem.push(makeBItem(child, prefix + item.name + '.', logicalCondition, showCondition))
         })
+        bitem = bitem.flat()
       }
     }
 

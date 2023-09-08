@@ -23,7 +23,7 @@ import { makeBlitzarQuasarSchemaForm, getBlitzarErrors } from 'ui'
 const schema = {
   items: [
     {
-      name: 'GROUP',
+      name: 'GROUPT',
       type: 'group',
       label: 'Group label',
       description: 'Group description',
@@ -49,7 +49,7 @@ const schema = {
       ]
     },
     {
-      name: 'GROUP',
+      name: 'GROUPN',
       type: 'group',
       label: '',
       items: [
@@ -68,6 +68,45 @@ const schema = {
           description: 'Date description',
           placeholder: 'Date placeholder',
           hint: 'Date hint',
+          required: true
+        }
+      ]
+    },
+    {
+      name: 'GROUPA',
+      type: 'group',
+      label: 'Group A',
+      items: [
+        {
+          name: 'GROUPB',
+          type: 'group',
+          label: 'Group B',
+          items: [
+            {
+              name: 'TEXTB',
+              type: 'text',
+              label: 'Text B label',
+              required: true
+            },
+            {
+              name: 'GROUPC',
+              type: 'group',
+              label: 'Group C',
+              items: [
+                {
+                  name: 'NUMBERC',
+                  type: 'number',
+                  label: 'Number C label',
+                  required: true
+                }       
+              ]
+            }   
+          ]
+        },
+        {
+          name: 'TEXTA',
+          type: 'text',
+          label: 'Text A label',
           required: true
         }
       ]
