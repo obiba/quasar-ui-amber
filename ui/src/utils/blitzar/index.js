@@ -33,19 +33,22 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
       bitem = builder.makeBItem(item, prefix)
     } else if (item.type === 'group') {
       bitem = []
+      const label = tr(item.label)
+      const description = tr(item.description)
       bitem.push({
         id: prefix + item.name,
         component: 'div',
+        class: (label || description) ? '' : 'invisible',
         slot: [
           {
             component: 'div',
             id: (prefix + item.name).replaceAll('.', '_').toLowerCase(),
-            slot: tr(item.label),
+            slot: label,
             class: item.labelClass ? item.labelClass : 'text-h5'
           },
           {
             component: 'div',
-            slot: tr(item.description),
+            slot: description,
             class: item.descriptionClass ? item.descriptionClass : 'text-subtitle2 text-grey-8'
           }
         ]
