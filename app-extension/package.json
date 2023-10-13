@@ -1,6 +1,6 @@
 {
   "name": "@obiba/quasar-app-extension-amber",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "A Quasar App Extension for reusing Quasar custom components in Amber forms",
   "author": "Yannick Marcon <yannick.marcon@obiba.org>",
   "license": "MIT",
