@@ -12,7 +12,7 @@ class MapBItem extends BItem {
             id: prefix + item.name,
             component: 'QAMap',
             label: this.tr(item.label),
-            subLabel: this.tr(item.description),
+            subLabel: this.trmd(item.description),
             defaultValue: typeof item.defaultValue === 'string' ? JSON.parse(item.defaultValue) : item.defaultValue,
             labelClasses: item.labelClass,
             multiple: item.multiple,

@@ -11,7 +11,7 @@ class SelectBItem extends BItem {
         id: prefix + item.name,
         component: 'QSelect',
         label: this.tr(item.label),
-        subLabel: this.tr(item.description),
+        subLabel: this.trmd(item.description),
         hint: this.tr(item.hint),
         defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
         options: item.options ? item.options.map(opt => {
@@ -41,7 +41,7 @@ class AutocompleteBItem extends BItem {
       id: prefix + item.name,
       component: 'QAAutocomplete',
       label: this.tr(item.label),
-      subLabel: this.tr(item.description),
+      subLabel: this.trmd(item.description),
       hint: this.tr(item.hint),
       defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
       options: item.options ? item.options.map(opt => {
@@ -68,7 +68,7 @@ class ImageSelectBItem extends BItem {
       id: prefix + item.name,
       component: 'QAImageSelect',
       label: this.tr(item.label),
-      subLabel: this.tr(item.description),
+      subLabel: this.trmd(item.description),
       hint: this.tr(item.hint),
       defaultValue: item.multiple ? BItem.stringToArray(item.default) : item.default,
       options: item.options ? item.options.map(opt => {

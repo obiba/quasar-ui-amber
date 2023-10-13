@@ -32,7 +32,7 @@ const schema = {
           name: 'TEXT',
           type: 'text',
           label: 'Text label',
-          description: 'Text description',
+          description: 'Text description<br/> with <a href="http://some_path.pdf">a html link</a> and [a markdown link](http://some_path.pdf)',
           placeholder: 'Text placeholder',
           hint: 'Text hint',
           required: true

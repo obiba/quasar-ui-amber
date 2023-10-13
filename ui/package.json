@@ -42,7 +42,6 @@
     "rimraf": "^3.0.0",
     "rollup": "^2.45.0",
     "rollup-plugin-hypothetical": "^2.1.1",
-    "snarkdown": "^2.0.0",
     "uglify-js": "^3.13.3",
     "zlib": "^1.0.5"
   },
@@ -57,6 +56,7 @@
     "last 4 iOS versions"
   ],
   "dependencies": {
+    "dompurify": "^3.0.6",
     "vue3-openlayers": "^0.1.63"
   }
 }

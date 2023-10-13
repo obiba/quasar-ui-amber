@@ -1,5 +1,4 @@
 import { h } from 'vue'
-import snarkdown from 'snarkdown'
 
 export default {
   name: 'QASection',
@@ -24,7 +23,7 @@ export default {
         const defaultBodyClass = 'text-subtitle1 text-grey-8' + (props.head ? ' q-mt-md' : '')
         children.push(h('div', {
           class: props.bodyClass ? props.bodyClass : defaultBodyClass,
-          innerHTML: snarkdown(props.body)
+          innerHTML: props.body
         }))
       }
 

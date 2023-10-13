@@ -1,7 +1,13 @@
+import { marked } from 'marked'
+
 class BItem {
 
     constructor(tr) {
         this.tr = tr
+    }
+
+    trmd(text) {
+        return text ? marked.parse(this.tr(text), {headerIds: false, mangle: false}) : text
     }
 
     // rewrites $('VAR') to formData.VAR

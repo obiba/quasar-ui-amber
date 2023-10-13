@@ -13,7 +13,7 @@ class SectionBItem extends BItem {
         identifier: (prefix + item.name).replaceAll('.', '_').toLowerCase(),
         head: this.tr(item.label),
         headClass: item.labelClass,
-        body: this.tr(item.description),
+        body: this.trmd(item.description),
         bodyClass: item.descriptionClass
       }
     }

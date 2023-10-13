@@ -12,7 +12,7 @@ class RadioGroupBItem extends BItem {
         id: prefix + item.name,
         component: 'QOptionGroup',
         label: this.tr(item.label),
-        subLabel: this.tr(item.description),
+        subLabel: this.trmd(item.description),
         defaultValue: item.default,
         options: item.options ? item.options.map(opt => {
           return {
@@ -36,7 +36,7 @@ class CheckboxGroupBItem extends BItem {
         id: prefix + item.name,
         component: 'QOptionGroup',
         label: this.tr(item.label),
-        subLabel: this.tr(item.description),
+        subLabel: this.trmd(item.description),
         defaultValue: BItem.stringToArray(item.default),
         type: 'checkbox',
         options: item.options ? item.options.map(opt => {
