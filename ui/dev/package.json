@@ -28,9 +28,16 @@
     "yarn": ">= 1.6.0"
   },
   "dependencies": {
-    "@blitzar/form": "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.11-obiba",
-    "@blitzar/types": "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.11-obiba",
-    "@blitzar/utils": "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.11-obiba",
-    "marked": "^9.1.1"
+    "@blitzar/form": "https://gitpkg.now.sh/obiba/blitzar/packages/form?v1.0.12-obiba",
+    "@blitzar/types": "https://gitpkg.now.sh/obiba/blitzar/packages/types?v1.0.12-obiba",
+    "@blitzar/utils": "https://gitpkg.now.sh/obiba/blitzar/packages/utils?v1.0.12-obiba",
+    "marked": "^9.1.1",
+    "vue": "^3.3.8",
+    "vue-router": "^4.0.0"
+  },
+  "devDependencies": {
+    "@quasar/app-webpack": "^3.9.2",
+    "@quasar/cli": "^1.4.0",
+    "@quasar/extras": "^1.16.4"
   }
 }

@@ -4,7 +4,7 @@
       <q-btn icon="done" @click="onValidate"/>
     </div>
     <div>
-      <BlitzForm :key='remountCounter' :schema='generatedSchema' v-model='model' :columnCount='1' gridGap='32px'/>
+      <BlitzForm ref="form" :key='remountCounter' :schema='generatedSchema' v-model='model' :columnCount='1' :showErrorsOn="errorMode" gridGap='32px'/>
     </div>
     <div v-if="errorsRemain" class="bg-red-6 text-white q-mt-lg q-pa-md">
       <pre>{{ JSON.stringify(errors, null, '  ') }}</pre>
@@ -127,11 +127,13 @@ export default {
       errorsRemain: ref(false),
       errors: ref([]),
       model: ref({}),
-      generatedSchema: makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true })
+      generatedSchema: makeBlitzarQuasarSchemaForm(schema, { locale: 'en', debug: true }),
+      errorMode: ref('interaction')
     }
   },
   methods: {
     onValidate () {
+      this.errorMode = 'always'
       const result = validateFormPerSchema(this.model, this.generatedSchema)
       this.errors = getBlitzarErrors(this.generatedSchema, result)
       this.errorsRemain = this.errors.length > 0

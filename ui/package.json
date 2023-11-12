@@ -7,7 +7,7 @@
   "module": "dist/index.esm.js",
   "main": "dist/index.common.js",
   "scripts": {
-    "dev": "cd dev && yarn dev && cd ..",
+    "dev": "cd dev && yarn && yarn quasar dev && cd ..",
     "dev:umd": "yarn build && node build/script.open-umd.js",
     "dev:ssr": "cd dev && yarn 'dev:ssr' && cd ..",
     "dev:ios": "cd dev && yarn 'dev:ios' && cd ..",
@@ -27,8 +27,9 @@
   "bugs": "https://github.com/obiba/quasar-ui-amber/issues",
   "homepage": "https://github.com/obiba/quasar-ui-amber",
   "devDependencies": {
-    "@quasar/app": "^3.0.0",
-    "@quasar/extras": "^1.0.0",
+    "@quasar/app-webpack": "^3.9.2",
+    "@quasar/cli": "^1.4.0",
+    "@quasar/extras": "^1.16.4",
     "@rollup/plugin-buble": "^0.21.3",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-json": "^4.0.0",
@@ -38,7 +39,7 @@
     "core-js": "^3.0.0",
     "fs-extra": "^8.1.0",
     "open": "^7.3.0",
-    "quasar": "^2.0.0",
+    "quasar": "^2.12.1",
     "rimraf": "^3.0.0",
     "rollup": "^2.45.0",
     "rollup-plugin-hypothetical": "^2.1.1",
@@ -57,6 +58,7 @@
   ],
   "dependencies": {
     "dompurify": "^3.0.6",
+    "vue": "^3.3.8",
     "vue3-openlayers": "^0.1.63"
   }
 }
