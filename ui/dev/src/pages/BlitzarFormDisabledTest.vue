@@ -29,7 +29,7 @@ const schema = {
       description: 'Text description',
       placeholder: 'Text placeholder',
       hint: 'Text hint',
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
     },
     {
       name: 'TEXTAREA',
@@ -38,7 +38,7 @@ const schema = {
       description: 'Text area description',
       placeholder: 'Text area placeholder',
       hint: 'Text area hint',
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
     },
     {
       name: 'NUMBER',
@@ -46,7 +46,15 @@ const schema = {
       label: 'Number label',
       description: 'Number description',
       hint: 'Number hint',
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
+    },
+    {
+      name: 'NUMBER_FUNC',
+      type: 'number',
+      label: 'Number func label',
+      description: 'Number description',
+      hint: 'Number hint',
+      disabled: `() => $('DISABLED')`
     },
     {
       name: 'DATE',
@@ -55,14 +63,14 @@ const schema = {
       description: 'Date description',
       placeholder: 'Date placeholder',
       hint: 'Date hint',
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
     },
     {
       name: 'GROUP',
       type: 'group',
       label: 'Group label',
       description: 'Group description',
-      disabled: 'formData.DISABLED',
+      disabled: "$('DISABLED')",
       items: [
         {
           name: 'DATETIME',
@@ -71,7 +79,7 @@ const schema = {
           description: 'Datetime description',
           placeholder: 'Datetime placeholder',
           hint: 'Datetime hint',
-          disabled: 'formData.DISABLED'
+          disabled: "$('DISABLED')"
         },
         {
           name: 'TIME',
@@ -80,7 +88,7 @@ const schema = {
           description: 'Time description',
           placeholder: 'Time placeholder',
           hint: 'Time hint',
-          disabled: 'formData.DISABLED'
+          disabled: "$('DISABLED')"
         }
       ]
     },
@@ -99,14 +107,14 @@ const schema = {
           label: 'female'
         }
       ],
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
     },
     {
       name: 'CHECKBOXGROUP',
       type: 'checkboxgroup',
       label: 'Checkbox group label',
       description: 'Checkbox group description',
-      disabled: 'formData.DISABLED',
+      disabled: "$('DISABLED')",
       options: [
         {
           value: '1',
@@ -128,7 +136,7 @@ const schema = {
       label: 'Select label',
       description: 'Select description',
       hint: 'Select hint',
-      disabled: 'formData.DISABLED',
+      disabled: "$('DISABLED')",
       options: [
         {
           value: '1',
@@ -146,11 +154,12 @@ const schema = {
     },
     {
       name: 'MULTISELECT',
-      type: 'multiselect',
+      type: 'select',
       label: 'Multiselect label',
       description: 'Multiselect description',
       hint: 'Multiselect hint',
-      disabled: 'formData.DISABLED',
+      disabled: "$('DISABLED')",
+      multiple: true,
       options: [
         {
           value: '1',
@@ -171,7 +180,7 @@ const schema = {
       type: 'toggle',
       label: 'Toggle label',
       description: 'Toggle description',
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
     },
     {
       name: 'SECTION',
@@ -189,7 +198,7 @@ const schema = {
       min: 10,
       max: 20,
       format: '',
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
     },
     {
       name: 'RATING',
@@ -198,7 +207,7 @@ const schema = {
       description: 'Rating description',
       max: 10,
       icon: 'stars',
-      disabled: 'formData.DISABLED'
+      disabled: "$('DISABLED')"
     }
   ],
   i18n: {}

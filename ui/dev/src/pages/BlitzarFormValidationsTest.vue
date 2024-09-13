@@ -31,6 +31,19 @@ const schema = {
       validationMessage: "Text is not required must have a minimum length of 4 chars."
     },
     {
+      name: "TEXT_FUNC",
+      type: "text",
+      label: "Text not required, with validation function, no hint",
+      required: false,
+      validation: `() => {
+        console.log(val);
+        console.log($('TEXT_FUNC'));
+        console.log(formData);
+        return val === undefined || val === null || val.length === 0 || val.length > 3
+      }`,
+      validationMessage: "Text is not required must have a minimum length of 4 chars."
+    },
+    {
       name: "TEXT",
       type: "text",
       label: "Text not required, with validation",

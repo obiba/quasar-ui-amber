@@ -21,21 +21,21 @@ const schema = {
       type: "radiogroup",
       label: "Radio group label",
       description: "Radio group description",
-      options: [ 
+      options: [
         {
           value: "1",
           label: "yes"
-        }, 
+        },
         {
           value: "2",
           label: "no"
-        }, 
+        },
         {
           value: "3",
           label: "other"
         }
       ]
-    }, 
+    },
     {
       name: "TEXT",
       type: "text",
@@ -43,7 +43,7 @@ const schema = {
       description: "Text description",
       placeholder: "Text placeholder",
       hint: "Text hint",
-      condition: "$('RADIOGROUP') === '3'"
+      condition: `() => $('RADIOGROUP') === '3' || $('RADIOGROUP') === '1'`
     },
     {
       name: "GROUP",

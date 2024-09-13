@@ -32,6 +32,21 @@ const schema = {
       compute: "(($('FIRSTNAME') || '') + ' ' + ($('LASTNAME') || '')).trim()"
     },
     {
+      name: "FULLNAME_FUNC",
+      type: "computed",
+      compute: `() => {
+        if ($('FIRSTNAME') && $('LASTNAME')) {
+          return ($('FIRSTNAME').trim() + ' ' + $('LASTNAME').trim()).trim()
+        } else if ($('FIRSTNAME')) {
+          return $('FIRSTNAME').trim()
+        } else if ($('LASTNAME')) {
+          return $('LASTNAME').trim()
+        } else {
+          return ''
+        }
+      }`
+    },
+    {
       name: "NUM1",
       type: "number",
       label: "Number one"

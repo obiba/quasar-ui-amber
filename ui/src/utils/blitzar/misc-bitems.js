@@ -60,7 +60,8 @@ class ComputedBItem extends BItem {
           }
           return oldValue
         }
-        const rval = (${bcompute})
+        const compute = (${bcompute})
+        const rval = typeof compute === 'function' ? compute(formData) : compute
         if (val !== rval) { updateField({ id: '${id}', value: rval }) }
         return rval
       } catch (err) {

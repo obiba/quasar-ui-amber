@@ -73,7 +73,9 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
         } else {
           const requiredScript = `{
             try {
-              return (${brequired})
+              const compute = (${brequired})
+              const rval = typeof compute === 'function' ? compute(formData) : compute
+              return (rval)
             } catch (err) {
               if (${options.debug}) {
                 console.error('${bitem0.id}.required eval error')
@@ -96,7 +98,9 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           const bvalidation = BItem.variableRefRewrite(item.validation)
           const script = `{
             try {
-              return !(${bvalidation})
+              const compute = (${bvalidation})
+              const rval = typeof compute === 'function' ? compute(formData, val) : compute
+              return !(rval)
             } catch (err) {
               if (${options.debug}) {
                 console.error('${bitem0.id}.validation eval error')
@@ -125,7 +129,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
             const bcondition = BItem.variableRefRewrite(logicalCondition)
             script = `{
               try {
-                const rval = ${bcondition}
+                const compute = (${bcondition})
+                const rval = typeof compute === 'function' ? compute(formData) : compute
                 if (!rval && updateField) { updateField({ id: '${bitem0.id}', value: undefined }) }
                 return (${showCondition}) === undefined ? rval : ((${showCondition}) && rval)
               } catch (err) {
@@ -163,7 +168,8 @@ function makeBlitzarQuasarSchemaForm(schema, options) {
           const bdisabled = BItem.variableRefRewrite(item.disabled)
           const script = `{
             try {
-              const rval = (${bdisabled})
+              const compute = (${bdisabled})
+              const rval = typeof compute === 'function' ? compute(formData) : compute
               if (rval) { updateField({ id: '${bitem0.id}', value: undefined }) }
               return rval
             } catch (err) {
