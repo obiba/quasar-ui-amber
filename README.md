@@ -1,13 +1,16 @@
-# Quasar App Extension Amber
+<img src="https://img.shields.io/npm/v/quasar-ui-amber.svg?label=quasar-ui-amber">
+<img src="https://img.shields.io/npm/v/quasar-app-extension-amber.svg?label=quasar-app-extension-amber">
 
-[![npm](https://img.shields.io/npm/v/@obiba/quasar-app-extension-amber.svg?label=quasar-app-extension-amber)](https://www.npmjs.com/package/@obiba/quasar-app-extension-amber)
-[![npm](https://img.shields.io/npm/dt/@obiba/quasar-app-extension-amber.svg)](https://www.npmjs.com/package/@obiba/quasar-app-extension-amber)
-
-Compatible with [Quasar](https://quasar.dev/) UI v2 and [Vue](https://vuejs.org/) 3.
+Compatible with Quasar UI v2 and Vue 3.
 
 # Structure
 * [/ui](ui) - standalone npm package
+
 * [/app-extension](app-extension) - Quasar app extension
 
+
+# Donate
+If you appreciate the work that went into this project, please consider [donating to Quasar](https://donate.quasar.dev).
+
 # License
-MIT (c) Yannick Marcon <yannick.marcon@obiba.org>
+MIT (c) ymarcon <yannick.marcon@epfl.ch>

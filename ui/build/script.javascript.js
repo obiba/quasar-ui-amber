@@ -7,8 +7,6 @@ const buble = require('@rollup/plugin-buble')
 const json = require('@rollup/plugin-json')
 const { nodeResolve } = require('@rollup/plugin-node-resolve')
 const replace = require('@rollup/plugin-replace')
-const hypothetical = require('rollup-plugin-hypothetical')
-const commonjs = require('@rollup/plugin-commonjs')
 
 const { version } = require('../package.json')
 
@@ -16,18 +14,6 @@ const buildConf = require('./config')
 const buildUtils = require('./utils')
 
 const rollupPlugins = [
-  /* hypothetical({
-    allowFallthrough: true,
-    files: {
-      // Error: 'default' is not exported by node_modules/pbf/index.js, imported by node_modules/ol/format/MVT.js
-      'pbf': `
-        export default {};
-      `,
-      'vue3-openlayers': `
-        export default {};
-      `
-    }
-  }), */
   replace({
     preventAssignment: false,
     values: {
@@ -39,21 +25,9 @@ const rollupPlugins = [
     preferBuiltins: false
   }),
   json(),
-  /* commonjs({
-    // Error: 'Map' is not exported by node_modules/vue3-openlayers/dist/vue3-openlayers.common.js
-    include: 'node_modules/vue3-openlayers/dist/vue3-openlayers.common.js'
-  })*/, 
-  // commonjs({
-  //   include: [
-  //     /node_modules/
-  //   ]
-  // }),
-  /* buble({
-    transforms: {
-      dangerousForOf: true
-    },
+  buble({
     objectAssign: 'Object.assign'
-  }) */
+  })
 ]
 
 const builds = [
@@ -93,7 +67,7 @@ const builds = [
         input: pathResolve('../src/index.umd.js')
       },
       output: {
-        name: 'amberFormUI',
+        name: 'amber',
         file: pathResolve('../dist/index.umd.js'),
         format: 'umd'
       }
@@ -124,7 +98,7 @@ function pathResolve (_path) {
 function addAssets (builds, type, injectName) {
   const
     files = fs.readdirSync(pathResolve('../../ui/src/components/' + type)),
-    plugins = [ buble(bubleConfig) ],
+    plugins = [ buble(/* bubleConfig */) ],
     outputDir = pathResolve(`../dist/${type}`)
 
     fse.mkdirp(outputDir)
@@ -142,7 +116,7 @@ function addAssets (builds, type, injectName) {
           output: {
             file: addExtension(pathResolve(`../dist/${type}/${file}`), 'umd'),
             format: 'umd',
-            name: `amberFormUI.${injectName}.${name}`
+            name: `amber.${injectName}.${name}`
           }
         },
         build: {
@@ -161,12 +135,12 @@ function build (builds) {
 function genConfig (opts) {
   Object.assign(opts.rollup.input, {
     plugins: rollupPlugins,
-    external: [ 'vue', 'quasar', 'vue3-openlayers', 'ol', 'ol-contextmenu', 'ol-ext', 'ol-mapbox-style', 'pbf' ]
+    external: [ 'vue', 'quasar' ]
   })
 
   Object.assign(opts.rollup.output, {
     banner: buildConf.banner,
-    globals: { vue: 'Vue', quasar: 'Quasar', 'vue3-openlayers': 'OpenLayersMap' }
+    globals: { vue: 'Vue', quasar: 'Quasar' }
   })
 
   return opts

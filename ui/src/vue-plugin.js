@@ -11,9 +11,19 @@ import { QIcon, QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 
 import OpenLayersMap from 'vue3-openlayers'
 //import 'vue3-openlayers/dist/vue3-openlayers.css'
 
+// import Map from 'ol/Map';
+// import View from 'ol/View';
+// import { Geolocation } from 'ol/Geolocation';
+// import { Attribution, FullScreen, Zoom } from 'ol/control';
+// import { Tile, Vector as VectorLayer } from 'ol/layer';
+// import { Vector as VectorSource, OSM as OSMSource } from 'ol/source';
+// import { Style, Stroke, Fill, Circle } from 'ol/style';
+// import { Draw } from 'ol/interaction';
+
 const version = __UI_VERSION__
 
 function install (app) {
+  app.use(OpenLayersMap)
   app.component(QAAutocomplete.name, QAAutocomplete)
   app.component(QADate.name, QADate)
   app.component(QADatetime.name, QADatetime)
@@ -28,7 +38,6 @@ function install (app) {
   app.component(QSelect.name, QSelect)
   app.component(QOptionGroup.name, QOptionGroup)
   app.component(QToggle.name, QToggle)
-  app.use(OpenLayersMap)
 }
 
 export {

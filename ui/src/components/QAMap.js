@@ -139,41 +139,41 @@ export default {
             }
 
             const mapComponents = [
-                h(Map.View, viewProps),
-                h(MapControls.FullScreenControl),
+                h(Map.OlView, viewProps),
+                h(MapControls.OlFullscreenControl),
                 //h(MapControls.MousePositionControl),
-                h(MapControls.ZoomControl),
-                h(MapControls.AttributionControl),
-                h(Layers.TileLayer, null, {
-                    default: () => [h(Sources.SourceOSM)]
+                h(MapControls.OlZoomControl),
+                h(MapControls.OlAttributionControl),
+                h(Layers.OlTileLayer, null, {
+                    default: () => [h(Sources.OlSourceOsm)]
                 }),
-                h(Layers.VectorLayer, null, {
+                h(Layers.OlVectorLayer, null, {
                     default: () => [
-                        h(Sources.SourceVector, {
+                        h(Sources.OlSourceVector, {
                             projection: projection.value,
                             features: zones.value
                         }, {
                             default: () => [
-                                h(Interactions.DrawInteraction, {
+                                h(Interactions.OlInteractionDraw, {
                                     type: props.geometryType,
                                     onDrawend: drawend
                                 })
                             ]
                         }),
-                        h(Styles.Style, null, {
+                        h(Styles.OlStyle, null, {
                             default: () => [
-                                h(Styles.Stroke, {
+                                h(Styles.OlStyleStroke, {
                                     color: 'red',
                                     width: 2
                                 }),
-                                h(Styles.Fill, {
+                                h(Styles.OlStyleFill, {
                                     color: 'rgba(255,255,255,0.1)'
                                 }),
-                                h(Styles.Circle, {
+                                h(Styles.OlStyleCircle, {
                                     radius: 7
                                 }, {
                                     default: () => [
-                                        h(Styles.Fill, {
+                                        h(Styles.OlStyleFill, {
                                             color: 'blue'
                                         })
                                     ]
@@ -185,7 +185,7 @@ export default {
             ]
 
             if (props.geoLocation) {
-                mapComponents.push(h(Map.GeoLocation, {
+                mapComponents.push(h(Map.OlGeolocation, {
                     projection: projection.value,
                     onPositionChanged: geoLocationChanged
                 }))
@@ -201,7 +201,7 @@ export default {
             }
 
             const children = [
-                h(Map.Map, {
+                h(Map.OlMap, {
                     class: 'q-mt-sm',
                     loadTilesWhileAnimating: true,
                     loadTilesWhileInteracting: true,

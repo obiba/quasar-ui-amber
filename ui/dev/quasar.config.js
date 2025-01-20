@@ -48,8 +48,7 @@ module.exports = function (ctx) {
 
       chainWebpack (chain) {
         chain.resolve.alias.merge({
-          ui: path.resolve(__dirname, `../src/index.esm.js`),
-          vue: path.resolve(__dirname, '../node_modules/vue')
+          ui: path.resolve(__dirname, `../src/index.esm.js`)
         })
 
         chain.plugin('define-ui')
@@ -60,7 +59,7 @@ module.exports = function (ctx) {
     },
 
     devServer: {
-      port: 3070,
+      // port: 8080,
       open: true // opens browser window automatically
     },
 
