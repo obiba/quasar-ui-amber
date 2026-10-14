@@ -60,5 +60,9 @@
     "dompurify": "^3.0.6",
     "vue": "^3.3.8",
     "vue3-openlayers": "^0.1.63"
+  },
+  "peerDependencies": {
+    "@blitzar/form": "*",
+    "@obiba/quasar-ui-json-form": ">=0.10.0"
   }
 }

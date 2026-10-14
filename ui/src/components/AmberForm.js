@@ -1,0 +1,175 @@
+import { h, ref, computed, watch } from 'vue'
+import { BlitzForm, validateFormPerSchema } from '@blitzar/form'
+import { QJsonForm } from '@obiba/quasar-ui-json-form'
+import { makeBlitzarQuasarSchemaForm, getBlitzarErrors } from '../utils/blitzar'
+import makeSchemaFormTr from '../utils/i18n'
+
+/** data key of the page shown by the Blitzar forms (removed from the emitted data) */
+const PAGE_KEY = '__amberPage'
+
+/**
+ * Whether an Amber form schema is in the JSON Forms format (`schema`,
+ * `uischema` and `translations`, from `@obiba/quasar-ui-json-form/amber`),
+ * rather than the legacy one (`items` and `i18n`, rendered with Blitzar).
+ */
+function isJsonForm (schema) {
+  return !!schema && typeof schema.uischema === 'object' && schema.uischema !== null
+}
+
+/** The number of pages of a form in the multiple steps layout: one per top-level item. */
+function getPageCount (schema) {
+  if (isJsonForm(schema)) return Array.isArray(schema.uischema.elements) ? schema.uischema.elements.length : 0
+  return schema && Array.isArray(schema.items) ? schema.items.length : 0
+}
+
+/** `#/properties/A/properties/B` → `/A/B` */
+const toDataPath = (scope) => scope.replace(/^#/, '').replace(/\/properties\//g, '/')
+
+/** the data paths of the controls of a UI schema element */
+function controlPaths (element, paths = []) {
+  if (element && typeof element === 'object') {
+    if (typeof element.scope === 'string') paths.push(toDataPath(element.scope))
+    if (Array.isArray(element.elements)) element.elements.forEach(child => controlPaths(child, paths))
+  }
+  return paths
+}
+
+/** the data path an AJV error is about: the `required` errors point at the missing property */
+const errorPath = (error) => {
+  const missing = error.keyword === 'required' && error.params ? error.params.missingProperty : undefined
+  return typeof missing === 'string' ? `${error.instancePath}/${missing}` : error.instancePath
+}
+
+/** the schema of the property at a data path */
+const propertyAt = (schema, path) => path.split('/').slice(1)
+  .reduce((s, key) => (s && s.properties ? s.properties[key] : undefined), schema)
+
+/**
+ * An Amber form, in either format: the legacy one is rendered with Blitzar,
+ * the JSON Forms one with `QJsonForm`. The collected data is the same.
+ *
+ * `page` shows one top-level item (multiple steps layout), all of them when
+ * undefined. `validate()` returns the errors of the shown items as
+ * `[{ id, label, message }]` (as `getBlitzarErrors`), and displays them.
+ */
+export default {
+  name: 'AmberForm',
+  props: {
+    modelValue: { type: Object, default: () => ({}) },
+    /** the Amber form schema, legacy (`items`) or JSON Forms (`uischema`) */
+    schema: { type: Object, required: true },
+    locale: { type: String, default: undefined },
+    /** the index of the top-level item shown; undefined shows them all */
+    page: { type: Number, default: undefined },
+    readonly: { type: Boolean, default: false },
+    /** set the item defaults (a new record); the Blitzar forms always do */
+    applyDefaults: { type: Boolean, default: false },
+    /** messages: `requiredField` */
+    lang: { type: Object, default: () => ({}) },
+    debug: { type: Boolean, default: false }
+  },
+  emits: ['update:modelValue'],
+
+  setup (props, { emit, expose }) {
+    const isJson = computed(() => isJsonForm(props.schema))
+    const shown = ref(false)
+    const tr = (key) => makeSchemaFormTr(props.schema, { locale: props.locale })(key)
+    const requiredMessage = () => props.lang.requiredField || 'Field is required'
+
+    // --- Blitzar
+
+    const blitzarSchema = computed(() => isJson.value
+      ? []
+      : makeBlitzarQuasarSchemaForm(props.schema, {
+        locale: props.locale,
+        debug: props.debug,
+        ...(props.page !== undefined ? { stepId: PAGE_KEY } : {})
+      }))
+
+    const blitzarData = computed(() => props.page === undefined
+      ? props.modelValue
+      : { ...props.modelValue, [PAGE_KEY]: props.page })
+
+    const onBlitzarUpdate = (data) => {
+      const { [PAGE_KEY]: _page, ...rest } = data || {}
+      emit('update:modelValue', rest)
+    }
+
+    const validateBlitzar = () => getBlitzarErrors(blitzarSchema.value, validateFormPerSchema(blitzarData.value, blitzarSchema.value))
+
+    // --- JSON Forms
+
+    // every page is rendered, the other ones hidden: their computations,
+    // conditions and clearings keep applying as the data changes
+    const uischema = computed(() => {
+      const ui = props.schema.uischema
+      if (!isJson.value || props.page === undefined) return ui
+      return {
+        ...ui,
+        elements: (ui.elements || []).map((element, index) => index === props.page
+          ? element
+          : { type: 'VerticalLayout', options: { class: 'hidden' }, elements: [element] })
+      }
+    })
+
+    const jsonErrors = ref([])
+
+    const validateJson = () => {
+      const elements = props.schema.uischema.elements || []
+      const paths = controlPaths(props.page === undefined ? props.schema.uischema : elements[props.page])
+      const seen = new Set()
+      return jsonErrors.value
+        .map(error => ({ error, path: errorPath(error) }))
+        .filter(({ path }) => paths.some(p => path === p || path.startsWith(p + '/')))
+        .filter(({ error, path }) => !seen.has(path + error.keyword) && seen.add(path + error.keyword))
+        .map(({ error, path }) => {
+          const property = propertyAt(props.schema.schema, path)
+          const title = property ? property.title : undefined
+          return {
+            id: path.slice(1).replaceAll('/', '.'),
+            label: title ? tr(title) : path.slice(1).replaceAll('/', '.'),
+            message: error.keyword === 'required' ? requiredMessage() : error.message
+          }
+        })
+    }
+
+    // a new form (another page, another record) shows its errors again on validation only
+    watch(() => [props.schema, props.page], () => { shown.value = false })
+
+    expose({
+      validate () {
+        shown.value = true
+        return isJson.value ? validateJson() : validateBlitzar()
+      }
+    })
+
+    return () => isJson.value
+      ? h(QJsonForm, {
+        class: 'amber-form',
+        modelValue: props.modelValue,
+        'onUpdate:modelValue': (data) => emit('update:modelValue', data),
+        'onUpdate:errors': (errors) => { jsonErrors.value = errors },
+        schema: props.schema.schema,
+        uischema: uischema.value,
+        translations: props.schema.translations,
+        locale: props.locale,
+        readonly: props.readonly,
+        applyDefaults: props.applyDefaults,
+        validationMode: shown.value ? 'ValidateAndShow' : 'ValidateAndHide'
+      })
+      : h(BlitzForm, {
+        class: 'amber-form',
+        key: props.page,
+        schema: blitzarSchema.value,
+        modelValue: blitzarData.value,
+        'onUpdate:modelValue': onBlitzarUpdate,
+        columnCount: 1,
+        gridGap: '32px',
+        mode: props.readonly ? 'disabled' : undefined,
+        showErrorsOn: shown.value ? 'always' : 'interaction',
+        lang: props.lang
+      })
+  }
+}
+
+export { isJsonForm, getPageCount }

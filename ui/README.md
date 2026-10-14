@@ -14,6 +14,35 @@
 * `QAImageSelect` input is a select component combined with an image map
 * `QAMap` input is a geographic map on which points, linestrings and polygons can be selected, using GeoJSON format
 * `QASection` is a section component (a header and a body), with Markdown support
+* `AmberForm` renders an Amber form in either format: the legacy one (`items` and `i18n`) with [Blitzar](https://github.com/obiba/blitzar), the JSON Forms one (`schema`, `uischema` and `translations`, see [`@obiba/quasar-ui-json-form/amber`](https://www.obiba.org/quasar-json-form/#/migration/amber)) with `QJsonForm`. The collected data is the same.
+
+## AmberForm
+
+`@blitzar/form` and `@obiba/quasar-ui-json-form` are peer dependencies: the application installs
+both (with the stylesheet and the i18n messages of `@obiba/quasar-ui-json-form`) during the
+transition from the legacy forms.
+
+```html
+<AmberForm ref="form" v-model="data" :schema="crf.schema" :locale="locale"
+  :page="multi ? data.__step : undefined" :lang="{ requiredField: t('required_field') }" />
+```
+
+```js
+const errors = form.value.validate() // [{ id, label, message }] of the items shown, now displayed
+```
+
+| Prop | Description |
+|---|---|
+| `schema` | the Amber form schema, legacy (`items`) or JSON Forms (`uischema`) |
+| `modelValue` | the form data (`v-model`) |
+| `locale` | the language of the form |
+| `page` | the index of the top-level item shown (multiple steps layout); all of them when undefined |
+| `readonly` | display the data only |
+| `applyDefaults` | set the item defaults in a new record (JSON Forms format; the Blitzar forms always do) |
+| `lang` | messages: `requiredField` |
+
+`isJsonForm(schema)` tells the format of a form schema, `getPageCount(schema)` its number of
+pages, and `makeSchemaFormTr(schema, { locale })` translates its texts in both formats.
 
 # Usage
 
