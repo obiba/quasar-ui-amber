@@ -25,9 +25,9 @@ help:
 # Install dependencies exactly as locked (fails if package.json and the lockfile disagree)
 install:
 	@echo "Installing UI package dependencies..."
-	cd ui && yarn install --frozen-lockfile
+	cd ui && yarn install --immutable
 	@echo "Installing UI dev app dependencies..."
-	cd ui/dev && yarn install --frozen-lockfile
+	cd ui/dev && yarn install --immutable
 	@echo "Installing app-extension dependencies..."
 	cd app-extension && npm ci
 	@echo "✓ All dependencies installed"
