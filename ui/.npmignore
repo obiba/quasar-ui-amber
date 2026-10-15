@@ -5,6 +5,7 @@ umd-test.html
 .DS_Store
 .thumbs.db
 yarn.lock
+.yarnrc.yml
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
