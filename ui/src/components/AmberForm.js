@@ -22,6 +22,39 @@ function getPageCount (schema) {
   return schema && Array.isArray(schema.items) ? schema.items.length : 0
 }
 
+/** the class of the top-level item `index` of a JSON Forms form (see `getToc`) */
+const itemClass = (index) => `amber-item-${index}`
+
+/** the top-level elements of a JSON Forms UI schema, each with the class of its index */
+const tagElements = (uischema) => (uischema.elements || []).map((element, index) => {
+  const cls = element.options && typeof element.options.class === 'string' ? element.options.class + ' ' : ''
+  return { ...element, options: { ...element.options, class: cls + itemClass(index) } }
+})
+
+/**
+ * The table of contents of a form: its top-level groups and sections that
+ * have a label, as `[{ id, label }]`; `getTocElement(id)` is the element of
+ * the rendered form to scroll to. The labels are translated in `options.locale`,
+ * or by `options.tr`.
+ */
+function getToc (schema, options = {}) {
+  const tr = options.tr || makeSchemaFormTr(schema, options)
+  if (isJsonForm(schema)) {
+    return (schema.uischema.elements || [])
+      .map((element, index) => ({ id: itemClass(index), label: ['Group', 'Section'].includes(element.type) && element.label ? tr(element.label) : undefined }))
+      .filter(entry => entry.label)
+  }
+  return (schema && Array.isArray(schema.items) ? schema.items : [])
+    .filter(item => ['group', 'section'].includes(item.type) && item.label)
+    .map(item => ({ id: item.name.replaceAll('.', '_').toLowerCase(), label: tr(item.label) }))
+    .filter(entry => entry.label)
+}
+
+/** The element of a table of contents entry, in the rendered form. */
+function getTocElement (id) {
+  return document.getElementById(id) || document.querySelector(`.amber-form .${id}`)
+}
+
 /** `#/properties/A/properties/B` → `/A/B` */
 const toDataPath = (scope) => scope.replace(/^#/, '').replace(/\/properties\//g, '/')
 
@@ -103,10 +136,12 @@ export default {
     // conditions and clearings keep applying as the data changes
     const uischema = computed(() => {
       const ui = props.schema.uischema
-      if (!isJson.value || props.page === undefined) return ui
+      if (!isJson.value) return ui
+      const elements = tagElements(ui)
+      if (props.page === undefined) return { ...ui, elements }
       return {
         ...ui,
-        elements: (ui.elements || []).map((element, index) => index === props.page
+        elements: elements.map((element, index) => index === props.page
           ? element
           : { type: 'VerticalLayout', options: { class: 'hidden' }, elements: [element] })
       }
@@ -172,4 +207,4 @@ export default {
   }
 }
 
-export { isJsonForm, getPageCount }
+export { isJsonForm, getPageCount, getToc, getTocElement }
