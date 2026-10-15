@@ -161,12 +161,12 @@ function build (builds) {
 function genConfig (opts) {
   Object.assign(opts.rollup.input, {
     plugins: rollupPlugins,
-    external: [ 'vue', 'quasar', 'vue3-openlayers', 'ol', 'ol-contextmenu', 'ol-ext', 'ol-mapbox-style', 'pbf' ]
+    external: [ 'vue', 'quasar', 'vue3-openlayers', 'ol', 'ol-contextmenu', 'ol-ext', 'ol-mapbox-style', 'pbf', '@blitzar/form', '@obiba/quasar-ui-json-form' ]
   })
 
   Object.assign(opts.rollup.output, {
     banner: buildConf.banner,
-    globals: { vue: 'Vue', quasar: 'Quasar', 'vue3-openlayers': 'OpenLayersMap' }
+    globals: { vue: 'Vue', quasar: 'Quasar', 'vue3-openlayers': 'OpenLayersMap', '@blitzar/form': 'BlitzarForm', '@obiba/quasar-ui-json-form': 'QuasarUiJsonForm' }
   })
 
   return opts
