@@ -5,7 +5,7 @@ import QAImageSelect from './components/QAImageSelect'
 import QAMap from './components/QAMap'
 import QASection from './components/QASection'
 import QATime from './components/QATime'
-import AmberForm, { isJsonForm, getPageCount, getToc, getTocElement } from './components/AmberForm'
+import AmberForm, { isJsonForm, getPageCount, isPageHidden, getToc, getTocElement } from './components/AmberForm'
 import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors } from './utils/blitzar'
 import makeSchemaFormTr from './utils/i18n'
 import { QIcon, QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 'quasar'
@@ -44,6 +44,7 @@ export {
   AmberForm,
   isJsonForm,
   getPageCount,
+  isPageHidden,
   getToc,
   getTocElement,
 

@@ -1,6 +1,6 @@
 import { h, ref, computed, watch } from 'vue'
 import { BlitzForm, validateFormPerSchema } from '@blitzar/form'
-import { QJsonForm } from '@obiba/quasar-ui-json-form'
+import { QJsonForm, ruleEngine } from '@obiba/quasar-ui-json-form'
 import { makeBlitzarQuasarSchemaForm, getBlitzarErrors } from '../utils/blitzar'
 import makeSchemaFormTr from '../utils/i18n'
 
@@ -76,6 +76,27 @@ const errorPath = (error) => {
 /** the schema of the property at a data path */
 const propertyAt = (schema, path) => path.split('/').slice(1)
   .reduce((s, key) => (s && s.properties ? s.properties[key] : undefined), schema)
+
+/** whether a UI schema element shows nothing: its visible rule fails, or all its children are hidden */
+function isElementHidden (element, schema, data) {
+  const property = typeof element.scope === 'string' ? propertyAt(schema, toDataPath(element.scope)) : undefined
+  const rule = (element.rules && element.rules.visible) || (property && property.rules && property.rules.visible)
+  // as in the renderers, a rule that fails to evaluate keeps the element visible
+  if (typeof rule === 'string' && rule.length > 0 && ruleEngine.evaluate(rule, data, true) !== true) return true
+  return Array.isArray(element.elements) && element.elements.every(child => isElementHidden(child, schema, data))
+}
+
+/**
+ * Whether a page of a form in the multiple steps layout (see `getPageCount`)
+ * has nothing to show with the data, its items being hidden by their
+ * visibility rules, so that it can be skipped.
+ */
+function isPageHidden (schema, page, data) {
+  // ponytail: JSON Forms only, the pages of the legacy forms are never hidden
+  if (!isJsonForm(schema) || !Array.isArray(schema.uischema.elements)) return false
+  const element = schema.uischema.elements[page]
+  return !!element && isElementHidden(element, schema.schema, data || {})
+}
 
 /**
  * An Amber form, in either format: the legacy one is rendered with Blitzar,
@@ -207,4 +228,4 @@ export default {
   }
 }
 
-export { isJsonForm, getPageCount, getToc, getTocElement }
+export { isJsonForm, getPageCount, isPageHidden, getToc, getTocElement }
