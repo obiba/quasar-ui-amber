@@ -19,7 +19,16 @@ function makeIndexedDBStore (name = 'amber-files') {
     }
     return db
   }
-  const run = async (mode, fn) => fn((await open()).transaction('files', mode).objectStore('files'))
+  const run = async (mode, fn) => {
+    const tx = (await open()).transaction('files', mode)
+    // a write is saved when its transaction completes (a quota error aborts it after the request succeeded)
+    const done = new Promise((resolve, reject) => {
+      tx.oncomplete = () => resolve()
+      tx.onerror = tx.onabort = () => reject(tx.error || new Error('Transaction aborted'))
+    })
+    const [result] = await Promise.all([fn(tx.objectStore('files')), done])
+    return result
+  }
   return {
     get: (id) => run('readonly', s => request(s.get(id))),
     getAll: () => run('readonly', s => request(s.getAll())),
@@ -79,14 +88,14 @@ function makeFileQueue ({ upload, download, store } = {}) {
         contentType: file.type || 'application/octet-stream'
       }
       await store.put({ ...ref, blob: file })
-      // a string control stores the id only
-      return context && context.schema && context.schema.type === 'string' ? ref.id : ref
+      // a path control (neither array nor object, as in the renderer) stores the id only
+      const type = context && context.schema && context.schema.type
+      return type === 'array' || type === 'object' ? ref : ref.id
     },
-    async remove (item) {
-      const id = item.id || item.path
-      if (isLocal(id)) await store.delete(id)
-    },
-    async download (item) {
+    // the queued file is kept on removal: the edit can be cancelled and a saved draft may still reference it
+    // ponytail: unreferenced queued files are not purged, add a sweep against the stored records if storage grows
+    remove () {},
+    async download (item, context) {
       const id = item.id || item.path
       if (isLocal(id)) {
         const entry = await store.get(id)
@@ -94,6 +103,14 @@ function makeFileQueue ({ upload, download, store } = {}) {
         save(entry.blob, entry.fileName)
       } else if (download) {
         save(await download(item), item.fileName || id)
+      } else {
+        // no download hook: the link of the uischema options, as the renderer does without hooks
+        const template = context && context.options && context.options.downloadUrl
+        const url = typeof template === 'string' && template
+          ? template.replace(/\{(\w+)\}/g, (match, key) => item[key] == null ? match : String(item[key]))
+          : item.url || item.href
+        if (!url) throw new Error('No download link')
+        window.open(url, '_blank', 'noopener')
       }
     }
   }

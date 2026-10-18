@@ -52,20 +52,37 @@ test('queues, flushes once and clears the files of a record', async () => {
   // another record's file stays queued
   const other = await queue.fileUpload.upload(file('o', 'other.txt'), {})
   await queue.clear(flushed)
-  assert.deepEqual([...store.map.keys()], [other.id])
+  assert.deepEqual([...store.map.keys()], [other])
 })
 
-test('drops a lost file and removes a queued file', async () => {
+test('keeps a removed file and drops a lost file', async () => {
   const store = memoryStore()
   const queue = makeFileQueue({ upload: async () => assert.fail('no upload'), store })
-  const ref = await queue.fileUpload.upload(file('x', 'x.txt'), {})
+  const ref = await queue.fileUpload.upload(file('x', 'x.txt'), { schema: { type: 'object' } })
+  // the removal can be cancelled: the file stays queued
   await queue.fileUpload.remove(ref)
-  assert.equal(store.map.size, 0)
+  assert.equal(store.map.size, 1)
+  store.map.clear()
   const warn = console.warn
   console.warn = () => {}
   try {
     assert.deepEqual(await queue.flush({ a: ref.id, b: [ref], c: 'x' }), { a: undefined, b: [], c: 'x' })
   } finally {
     console.warn = warn
+  }
+})
+
+test('stores the id in a path control and links a server file without a download hook', async () => {
+  const queue = makeFileQueue({ upload: async () => assert.fail('no upload'), store: memoryStore() })
+  // no schema type: a path control, as in the renderer
+  assert.match(await queue.fileUpload.upload(file('x', 'x.txt'), { schema: { format: 'file' } }), /^local:/)
+  const opened = []
+  globalThis.window = { open: (url) => opened.push(url) }
+  try {
+    await queue.fileUpload.download({ id: 'srv-1', fileName: 'a.txt' }, { options: { downloadUrl: '/files/{id}/{fileName}' } })
+    assert.deepEqual(opened, ['/files/srv-1/a.txt'])
+    await assert.rejects(queue.fileUpload.download({ id: 'srv-1' }, { options: {} }), /No download link/)
+  } finally {
+    delete globalThis.window
   }
 })
