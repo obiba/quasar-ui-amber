@@ -1,6 +1,6 @@
 import { h, ref, computed, watch } from 'vue'
 import { BlitzForm, validateFormPerSchema } from '@blitzar/form'
-import { QJsonForm, ruleEngine } from '@obiba/quasar-ui-json-form'
+import { QJsonForm, ruleEngine, fillPlaceholders } from '@obiba/quasar-ui-json-form'
 import { makeBlitzarQuasarSchemaForm, getBlitzarErrors } from '../utils/blitzar'
 import makeSchemaFormTr from '../utils/i18n'
 
@@ -22,6 +22,9 @@ function getPageCount (schema) {
   return schema && Array.isArray(schema.items) ? schema.items.length : 0
 }
 
+/** a JSON Forms text with its `{{ expression }}` placeholders replaced by their value with the data */
+const fillTexts = (text, data) => fillPlaceholders(text, (expression) => ruleEngine.evaluate(expression, data || {}, null))
+
 /** the class of the top-level item `index` of a JSON Forms form (see `getToc`) */
 const itemClass = (index) => `amber-item-${index}`
 
@@ -35,13 +38,13 @@ const tagElements = (uischema) => (uischema.elements || []).map((element, index)
  * The table of contents of a form: its top-level groups and sections that
  * have a label, as `[{ id, label }]`; `getTocElement(id)` is the element of
  * the rendered form to scroll to. The labels are translated in `options.locale`,
- * or by `options.tr`.
+ * or by `options.tr`, and their placeholders filled with `options.data`.
  */
 function getToc (schema, options = {}) {
   const tr = options.tr || makeSchemaFormTr(schema, options)
   if (isJsonForm(schema)) {
     return (schema.uischema.elements || [])
-      .map((element, index) => ({ id: itemClass(index), label: ['Group', 'Section'].includes(element.type) && element.label ? tr(element.label) : undefined }))
+      .map((element, index) => ({ id: itemClass(index), label: ['Group', 'Section'].includes(element.type) && element.label ? fillTexts(tr(element.label), options.data) : undefined }))
       .filter(entry => entry.label)
   }
   return (schema && Array.isArray(schema.items) ? schema.items : [])
@@ -183,7 +186,7 @@ export default {
           const title = property ? property.title : undefined
           return {
             id: path.slice(1).replaceAll('/', '.'),
-            label: title ? tr(title) : path.slice(1).replaceAll('/', '.'),
+            label: title ? fillTexts(tr(title), props.modelValue) : path.slice(1).replaceAll('/', '.'),
             message: error.keyword === 'required' ? requiredMessage() : error.message
           }
         })

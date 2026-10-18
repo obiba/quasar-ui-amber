@@ -44,8 +44,8 @@ const errors = form.value.validate() // [{ id, label, message }] of the items sh
 `isJsonForm(schema)` tells the format of a form schema, `getPageCount(schema)` its number of
 pages, `isPageHidden(schema, page, data)` whether a page has nothing to show (all its items
 hidden by their visibility rules, JSON Forms format), and `makeSchemaFormTr(schema, { locale })` translates its texts in both formats.
-`getToc(schema, { locale })` lists its top-level groups and sections with a label as
-`[{ id, label }]` (the labels translated by `tr` when given), and `getTocElement(id)` finds the element of an entry in the rendered form, to
+`getToc(schema, { locale, data })` lists its top-level groups and sections with a label as
+`[{ id, label }]` (the labels translated by `tr` when given, their `{{ expression }}` placeholders filled with `data`), and `getTocElement(id)` finds the element of an entry in the rendered form, to
 scroll to it (a "go to" menu).
 
 # Usage
