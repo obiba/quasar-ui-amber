@@ -1,7 +1,7 @@
 // npm test
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { makeFileQueue } from '../src/utils/file-queue.js'
+import { makeFileQueue, makeIndexedDBStore } from '../src/utils/file-queue.js'
 
 const memoryStore = () => {
   const map = new Map()
@@ -84,5 +84,25 @@ test('stores the id in a path control and links a server file without a download
     await assert.rejects(queue.fileUpload.download({ id: 'srv-1' }, { options: {} }), /No download link/)
   } finally {
     delete globalThis.window
+  }
+})
+
+test('reopens the database after a failed open', async () => {
+  let calls = 0
+  globalThis.indexedDB = {
+    open: () => {
+      calls++
+      const req = {}
+      setTimeout(() => { req.error = new Error('denied'); req.onerror() })
+      return req
+    }
+  }
+  try {
+    const store = makeIndexedDBStore()
+    await assert.rejects(store.get('x'), /denied/)
+    await assert.rejects(store.get('x'), /denied/)
+    assert.equal(calls, 2)
+  } finally {
+    delete globalThis.indexedDB
   }
 })

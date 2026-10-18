@@ -15,7 +15,13 @@ function makeIndexedDBStore (name = 'amber-files') {
     if (!db) {
       const req = indexedDB.open(name, 1)
       req.onupgradeneeded = () => req.result.createObjectStore('files', { keyPath: 'id' })
-      db = request(req)
+      // a failed or released connection is not cached: the next call reopens
+      db = request(req).then(conn => {
+        // another tab upgrades or deletes the database
+        conn.onversionchange = () => { conn.close(); db = undefined }
+        conn.onclose = () => { db = undefined }
+        return conn
+      }, error => { db = undefined; throw error })
     }
     return db
   }
@@ -60,7 +66,7 @@ const save = (blob, fileName) => {
  * and uploaded when the record is saved, so that a form can be filled offline.
  *
  * - `fileUpload`: the hooks of the `AmberForm` `fileUpload` prop. A picked file
- *   is queued with a `local:<uuid>` id.
+ *   is queued with a `local:<random hex>` id.
  * - `flush(data)`: uploads the queued files referenced by the record data
  *   (once: the server id is kept, a retry does not upload again) and returns
  *   the data with the server ids.
@@ -82,7 +88,8 @@ function makeFileQueue ({ upload, download, store } = {}) {
         navigator.storage.persist().catch(() => {})
       }
       const ref = {
-        id: LOCAL_PREFIX + crypto.randomUUID(),
+        // getRandomValues, unlike randomUUID, is available outside secure contexts (plain HTTP)
+        id: LOCAL_PREFIX + Array.from(crypto.getRandomValues(new Uint8Array(16)), b => b.toString(16).padStart(2, '0')).join(''),
         fileName: file.name,
         size: file.size,
         contentType: file.type || 'application/octet-stream'
