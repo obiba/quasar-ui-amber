@@ -162,7 +162,6 @@ function makeFileQueue ({ upload, download, store } = {}) {
     if (value && typeof value === 'object') {
       if (isLocal(value.id)) {
         const id = await once(value.id)
-        // eslint-disable-next-line no-unused-vars
         const { justUploaded, ...rest } = value
         return id ? { ...rest, id } : undefined
       }
