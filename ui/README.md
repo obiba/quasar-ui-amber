@@ -40,6 +40,7 @@ const errors = form.value.validate() // [{ id, label, message }] of the items sh
 | `readonly` | display the data only |
 | `applyDefaults` | set the item defaults in a new record (JSON Forms format; the Blitzar forms always do) |
 | `lang` | messages: `requiredField` |
+| `fileUpload` | the file upload hooks (`upload`, `remove`, `download`...) of the `file` and `files` controls (JSON Forms format), see `makeFileQueue` |
 
 `isJsonForm(schema)` tells the format of a form schema, `getPageCount(schema)` its number of
 pages, `isPageHidden(schema, page, data)` whether a page has nothing to show (all its items
@@ -47,6 +48,40 @@ hidden by their visibility rules, JSON Forms format), and `makeSchemaFormTr(sche
 `getToc(schema, { locale, data })` lists its top-level groups and sections with a label as
 `[{ id, label }]` (the labels translated by `tr` when given, their `{{ expression }}` placeholders filled with `data`), and `getTocElement(id)` finds the element of an entry in the rendered form, to
 scroll to it (a "go to" menu).
+
+## File queue
+
+`makeFileQueue({ upload, download })` stores the files picked in a form in the browser (IndexedDB),
+so that a form can be filled offline, and uploads them when the record is saved:
+
+```js
+const queue = makeFileQueue({
+  // the upload of a file to the server, returns { id, fileName, size, contentType }
+  upload: (blob, { fileName, contentType }) => api.post('/files', blob, {
+    headers: { 'Content-Type': contentType, 'X-File-Name': encodeURIComponent(fileName) }
+  }).then(res => res.data),
+  // the download of a stored file, with the app authentication (optional)
+  download: (item) => api.get(`/files/${item.id || item.path}`, { responseType: 'blob' }).then(res => res.data)
+})
+```
+
+```html
+<AmberForm v-model="data" :schema="crf.schema" :file-upload="queue.fileUpload" />
+```
+
+```js
+const saved = await queue.flush(data) // the queued files are uploaded, their local ids replaced by the server ids
+await api.post('/case-report', { ...record, data: saved })
+await queue.clear(saved) // the queued files of the saved record are deleted
+```
+
+- A picked file gets a `local:<uuid>` id: the `file` controls store this id, the `files` controls
+  an item `{ id, fileName, size, contentType }`. The browser is asked to persist the storage.
+- `flush(data)` uploads each queued file once: the server id is kept, so a retry after a failure
+  does not upload it again. A queued file that is no longer in the browser storage is dropped from
+  the data. The data passed is not modified.
+- `remove` deletes a queued file from the browser; `download` serves a queued file from the
+  browser, a stored one with the `download` option.
 
 # Usage
 
@@ -139,6 +174,11 @@ $ yarn dev:android
 
 # start dev in Electron mode
 $ yarn dev:electron
+```
+
+# Testing
+```bash
+$ yarn test
 ```
 
 # Building package

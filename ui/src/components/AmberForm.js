@@ -123,6 +123,8 @@ export default {
     applyDefaults: { type: Boolean, default: false },
     /** messages: `requiredField` */
     lang: { type: Object, default: () => ({}) },
+    /** JSON Forms only: the file upload hooks (`upload`, `remove`, `download`...), see `makeFileQueue` */
+    fileUpload: { type: Object, default: undefined },
     debug: { type: Boolean, default: false }
   },
   emits: ['update:modelValue'],
@@ -173,6 +175,8 @@ export default {
 
     const jsonErrors = ref([])
 
+    const config = computed(() => props.fileUpload ? { fileUpload: props.fileUpload } : undefined)
+
     const validateJson = () => {
       const elements = props.schema.uischema.elements || []
       const paths = controlPaths(props.page === undefined ? props.schema.uischema : elements[props.page])
@@ -214,6 +218,7 @@ export default {
         locale: props.locale,
         readonly: props.readonly,
         applyDefaults: props.applyDefaults,
+        config: config.value,
         validationMode: shown.value ? 'ValidateAndShow' : 'ValidateAndHide'
       })
       : h(BlitzForm, {

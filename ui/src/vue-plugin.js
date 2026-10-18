@@ -8,6 +8,7 @@ import QATime from './components/QATime'
 import AmberForm, { isJsonForm, getPageCount, isPageHidden, getToc, getTocElement } from './components/AmberForm'
 import { makeBlitzarQuasarSchemaForm, getBlitzarIdsAt, getBlitzarErrors } from './utils/blitzar'
 import makeSchemaFormTr from './utils/i18n'
+import { makeFileQueue, makeIndexedDBStore } from './utils/file-queue'
 import { QIcon, QInput, QSlider, QSelect, QOptionGroup, QToggle, QRating } from 'quasar'
 import OpenLayersMap from 'vue3-openlayers'
 //import 'vue3-openlayers/dist/vue3-openlayers.css'
@@ -52,6 +53,9 @@ export {
   getBlitzarIdsAt,
   makeSchemaFormTr,
   getBlitzarErrors,
+
+  makeFileQueue,
+  makeIndexedDBStore,
 
   install
 }
