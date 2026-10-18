@@ -1443,7 +1443,7 @@ __metadata:
     zlib: "npm:^1.0.5"
   peerDependencies:
     "@blitzar/form": "*"
-    "@obiba/quasar-ui-json-form": ">=0.11.0"
+    "@obiba/quasar-ui-json-form": ">=0.12.0"
   languageName: unknown
   linkType: soft
 

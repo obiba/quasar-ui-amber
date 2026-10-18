@@ -36,3 +36,6 @@ jobs:
 
       - name: Build UI package
         run: yarn build
+
+      - name: Test UI package
+        run: yarn test
