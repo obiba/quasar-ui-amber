@@ -75,12 +75,19 @@ await api.post('/case-report', { ...record, data: saved })
 await queue.clear(saved) // the queued files of the saved record are deleted
 ```
 
-- A picked file gets a `local:<uuid>` id: the `file` controls store this id, the `files` controls
+```js
+// at startup: the queued files of abandoned forms are deleted
+await queue.purge(drafts.map(draft => draft.data))
+```
+
+- A picked file gets a `local:<random hex>` id: the `file` controls store this id, the `files` controls
   an item `{ id, fileName, size, contentType }`. The browser is asked to persist the storage.
 - `flush(data)` uploads each queued file once: the server id is kept, so a retry after a failure
   does not upload it again. A queued file that is no longer in the browser storage is dropped from
-  the data. The data passed is not modified.
-- `remove` deletes a queued file from the browser; `download` serves a queued file from the
+  the data. The data passed is not modified. The files are uploaded in parallel.
+- `purge(dataList)` deletes the queued files that none of the record data stored in the browser
+  references, except the files picked in the last day (a form being filled).
+- `remove` keeps a queued file, as the edit can be cancelled; `download` serves a queued file from the
   browser, a stored one with the `download` option.
 
 # Usage

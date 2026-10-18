@@ -106,3 +106,34 @@ test('reopens the database after a failed open', async () => {
     delete globalThis.indexedDB
   }
 })
+
+test('uploads in parallel, a file referenced twice once', async () => {
+  let running = 0
+  let max = 0
+  const uploads = []
+  const upload = async (blob, { fileName }) => {
+    uploads.push(fileName)
+    max = Math.max(max, ++running)
+    await new Promise(resolve => setTimeout(resolve, 10))
+    running--
+    return { id: 'srv-' + fileName }
+  }
+  const queue = makeFileQueue({ upload, store: memoryStore() })
+  const a = await queue.fileUpload.upload(file('a', 'a.txt'), {})
+  const b = await queue.fileUpload.upload(file('b', 'b.txt'), {})
+  assert.deepEqual(await queue.flush({ a, b, again: [a] }), { a: 'srv-a.txt', b: 'srv-b.txt', again: ['srv-a.txt'] })
+  assert.deepEqual(uploads.sort(), ['a.txt', 'b.txt'])
+  assert.equal(max, 2)
+})
+
+test('purges the old queued files that no record references', async () => {
+  const store = memoryStore()
+  const queue = makeFileQueue({ upload: async () => assert.fail('no upload'), store })
+  const kept = await queue.fileUpload.upload(file('k', 'kept.txt'), {})
+  const recent = await queue.fileUpload.upload(file('r', 'recent.txt'), {})
+  const old = await queue.fileUpload.upload(file('o', 'old.txt'), {})
+  // picked more than a day ago
+  for (const id of [kept, old]) store.map.get(id).created = 0
+  await queue.purge([{ doc: kept }])
+  assert.deepEqual([...store.map.keys()].sort(), [kept, recent].sort())
+})

@@ -72,6 +72,9 @@ const save = (blob, fileName) => {
  *   the data with the server ids.
  * - `clear(data)`: deletes the queued files of a saved record (the data with
  *   either the local or the server ids).
+ * - `purge(dataList)`: deletes the queued files that the data of the records
+ *   stored in the browser do not reference (the files of abandoned forms),
+ *   except the files picked in the last day.
  *
  * @param {Object} options
  * @param {Function} options.upload `(blob, { fileName, contentType }) => Promise<{ id, fileName, size, contentType }>`, the upload to the server
@@ -94,13 +97,12 @@ function makeFileQueue ({ upload, download, store } = {}) {
         size: file.size,
         contentType: file.type || 'application/octet-stream'
       }
-      await store.put({ ...ref, blob: file })
+      await store.put({ ...ref, blob: file, created: Date.now() })
       // a path control (neither array nor object, as in the renderer) stores the id only
       const type = context && context.schema && context.schema.type
       return type === 'array' || type === 'object' ? ref : ref.id
     },
-    // the queued file is kept on removal: the edit can be cancelled and a saved draft may still reference it
-    // ponytail: unreferenced queued files are not purged, add a sweep against the stored records if storage grows
+    // the queued file is kept on removal: the edit can be cancelled and a saved draft may still reference it (see purge)
     remove () {},
     async download (item, context) {
       const id = item.id || item.path
@@ -138,34 +140,54 @@ function makeFileQueue ({ upload, download, store } = {}) {
     return entry.serverId
   }
 
-  const walk = async (value) => {
-    if (isLocal(value)) return resolve(value)
+  /** the values of the promises, after all of them are settled: a retry does not race the uploads still running */
+  const all = async (promises) => {
+    const results = await Promise.allSettled(promises)
+    const failed = results.find(result => result.status === 'rejected')
+    if (failed) throw failed.reason
+    return results.map(result => result.value)
+  }
+
+  /** uploads the files in parallel, a file referenced twice once */
+  const walk = async (value, pending) => {
+    const once = (id) => {
+      if (!pending.has(id)) pending.set(id, resolve(id))
+      return pending.get(id)
+    }
+    if (isLocal(value)) return once(value)
     if (Array.isArray(value)) {
-      const items = []
-      for (const item of value) items.push(await walk(item))
+      const items = await all(value.map(item => walk(item, pending)))
       return items.filter(item => item !== undefined)
     }
     if (value && typeof value === 'object') {
       if (isLocal(value.id)) {
-        const id = await resolve(value.id)
+        const id = await once(value.id)
         // eslint-disable-next-line no-unused-vars
         const { justUploaded, ...rest } = value
         return id ? { ...rest, id } : undefined
       }
-      const rval = {}
-      for (const [key, val] of Object.entries(value)) rval[key] = await walk(val)
-      return rval
+      const entries = Object.entries(value)
+      const values = await all(entries.map(([, val]) => walk(val, pending)))
+      return Object.fromEntries(entries.map(([key], i) => [key, values[i]]))
     }
     return value
   }
 
   return {
     fileUpload,
-    flush: (data) => walk(data),
+    flush: (data) => walk(data, new Map()),
     async clear (data) {
       const ids = strings(data)
       for (const entry of await store.getAll()) {
         if (ids.has(entry.id) || (entry.serverId && ids.has(entry.serverId))) await store.delete(entry.id)
+      }
+    },
+    async purge (dataList) {
+      const ids = strings(dataList)
+      // ponytail: a fixed grace period for the files of the forms being filled, make it an option if a day does not fit
+      const before = Date.now() - 24 * 60 * 60 * 1000
+      for (const entry of await store.getAll()) {
+        if (!ids.has(entry.id) && !(entry.created > before)) await store.delete(entry.id)
       }
     }
   }
