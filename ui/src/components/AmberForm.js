@@ -1,6 +1,6 @@
 import { h, ref, computed, watch } from 'vue'
 import { BlitzForm, validateFormPerSchema } from '@blitzar/form'
-import { QJsonForm, ruleEngine, fillPlaceholders } from '@obiba/quasar-ui-json-form'
+import { QJsonForm, ruleEngine, fillPlaceholders, countryCodes } from '@obiba/quasar-ui-json-form'
 import { makeBlitzarQuasarSchemaForm, getBlitzarErrors } from '../utils/blitzar'
 import makeSchemaFormTr from '../utils/i18n'
 
@@ -175,7 +175,8 @@ export default {
 
     const jsonErrors = ref([])
 
-    const config = computed(() => props.fileUpload ? { fileUpload: props.fileUpload } : undefined)
+    // the countries controls list all the countries, unless a form sets its own `countries`
+    const config = computed(() => ({ countries: countryCodes, ...(props.fileUpload ? { fileUpload: props.fileUpload } : {}) }))
 
     const validateJson = () => {
       const elements = props.schema.uischema.elements || []
